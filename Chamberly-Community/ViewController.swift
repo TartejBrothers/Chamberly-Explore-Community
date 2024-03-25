@@ -1,48 +1,80 @@
 import UIKit
 
-class ViewController: UIViewController {
-    private lazy var header: UILabel = {
-        let view = UILabel()
-        view.frame = CGRect(x: 0, y: 0, width: 169.14, height: 37)
-        view.text = "Communities"
-        
-        // Create gradient layer for the text
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = view.bounds
-        gradientLayer.colors = [
-            UIColor(red: 0.478, green: 0.478, blue: 1, alpha: 1).cgColor, // #7A7AFF
-            UIColor(red: 0.973, green: 0.287, blue: 0.314, alpha: 0.7).cgColor // rgba(248, 73, 80, 0.70)
-        ]
-        gradientLayer.locations = [0, 1]
-        
-        // Apply the gradient mask to the text
-        view.layer.mask = gradientLayer
-        
-        // Set font color to black after applying the gradient mask
-        view.textColor = .black
-        
-        let parent = self.view!
-        parent.addSubview(view)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.widthAnchor.constraint(equalToConstant: 169.14).isActive = true
-        view.heightAnchor.constraint(equalToConstant: 37).isActive = true
-        view.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: 0).isActive = true
-        view.topAnchor.constraint(equalTo: parent.topAnchor, constant: 20).isActive = true // Adjusted top constraint
-        
-        return view
-    }()
-    
+class ViewController: UIViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
-        home()
+        setupHeader()
+        setupSearchBar()
     }
     
-    func home() {
-        self.view.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 1, alpha: 1)
-        self.view.addSubview(header)
+    func setupHeader() {
+        // Create a horizontal stack view for the header
+        let headerStackView = UIStackView()
+        headerStackView.axis = .horizontal
+        headerStackView.alignment = .center
+        headerStackView.spacing = 8
+        
+        // Create a label
+        let label = UILabel()
+        label.text = "Communities"
+        label.font = UIFont.systemFont(ofSize: 30)
+        label.textAlignment = .left
+        
+        // Add label to the header stack view
+        headerStackView.addArrangedSubview(label)
+        
+        // Create an image view
+        let imageView = UIImageView(image: UIImage(named: "pfp"))
+        
+        // Add image view to the header stack view
+        headerStackView.addArrangedSubview(imageView)
+        
+        // Add the header stack view to the view
+        headerStackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(headerStackView)
+        
+        NSLayoutConstraint.activate([
+            headerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            headerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            headerStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+        ])
     }
-}
+    
+    func setupSearchBar() {
+        let searchBar = UISearchBar()
+        searchBar.searchBarStyle = .minimal
+        searchBar.placeholder = "Search"
+        searchBar.backgroundColor = UIColor(red: 0.946, green: 0.926, blue: 0.989, alpha: 1)
+        searchBar.layer.cornerRadius = 10
+        
+        // Remove default border from search bar
+        searchBar.backgroundImage = UIImage()
+        
+        // Set clear background for search field to remove additional lines
+        if let searchField = searchBar.value(forKey: "searchField") as? UITextField {
+            searchField.background = UIImage()
+        }
+        
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchBar)
+        
+        // Add custom search icon on the left side
+        let searchIconView = UIView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
+        let searchImageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+        searchImageView.tintColor = .black
+        searchImageView.contentMode = .scaleAspectFit
+        searchIconView.addSubview(searchImageView)
+        
+        
+        NSLayoutConstraint.activate([
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 80),
+            searchBar.heightAnchor.constraint(equalToConstant: 36)
+        ])
+    }
 
+}
 
 #if DEBUG
 import SwiftUI
