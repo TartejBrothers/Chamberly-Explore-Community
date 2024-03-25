@@ -1,40 +1,79 @@
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupHorizontalRow()
+        setupHeader()
+        setupSearchBar()
     }
     
-    func setupHorizontalRow() {
-        // Create a horizontal stack view
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .leading
+    func setupHeader() {
+        // Create a horizontal stack view for the header
+        let headerStackView = UIStackView()
+        headerStackView.axis = .horizontal
+        headerStackView.alignment = .center
+        headerStackView.spacing = 8
+        
+        // Create a label
         let label = UILabel()
         label.text = "Communities"
-        label.font = UIFont.systemFont(ofSize: 30) // Set label font size
-        label.textAlignment = .left // Align label text to the left
+        label.font = UIFont.systemFont(ofSize: 30)
+        label.textAlignment = .left
         
-        // Add label to the stack view
-        stackView.addArrangedSubview(label)
+        // Add label to the header stack view
+        headerStackView.addArrangedSubview(label)
         
         // Create an image view
         let imageView = UIImageView(image: UIImage(named: "pfp"))
         
-        // Add image view to the stack view
-        stackView.addArrangedSubview(imageView)
+        // Add image view to the header stack view
+        headerStackView.addArrangedSubview(imageView)
         
-        // Set constraints for the stack view
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stackView)
+        // Add the header stack view to the view
+        headerStackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(headerStackView)
         
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20), // Adjust vertical position
+            headerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            headerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            headerStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
         ])
     }
+    
+    func setupSearchBar() {
+        let searchBar = UISearchBar()
+        searchBar.searchBarStyle = .minimal
+        searchBar.placeholder = "Search"
+        searchBar.backgroundColor = UIColor(red: 0.946, green: 0.926, blue: 0.989, alpha: 1)
+        searchBar.layer.cornerRadius = 10
+        
+        // Remove default border from search bar
+        searchBar.backgroundImage = UIImage()
+        
+        // Set clear background for search field to remove additional lines
+        if let searchField = searchBar.value(forKey: "searchField") as? UITextField {
+            searchField.background = UIImage()
+        }
+        
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchBar)
+        
+        // Add custom search icon on the left side
+        let searchIconView = UIView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
+        let searchImageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+        searchImageView.tintColor = .black
+        searchImageView.contentMode = .scaleAspectFit
+        searchIconView.addSubview(searchImageView)
+        
+        
+        NSLayoutConstraint.activate([
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 80),
+            searchBar.heightAnchor.constraint(equalToConstant: 36)
+        ])
+    }
+
 }
 
 #if DEBUG
@@ -61,4 +100,3 @@ struct ViewController_Preview: PreviewProvider {
     }
 }
 #endif
-
