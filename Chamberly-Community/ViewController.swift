@@ -7,6 +7,8 @@ class ViewController: UIViewController, UISearchBarDelegate {
         setupSearchBar()
         setupTabs()
         subHeading(with: "Trending")
+        let communityComponent = CommunityComponent()
+        view.addSubview(communityComponent)
     }
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
            super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)

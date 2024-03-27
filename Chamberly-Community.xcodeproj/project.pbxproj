@@ -13,6 +13,7 @@
 		089E66422BB1F31D00B83D33 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 089E66412BB1F31D00B83D33 /* Base */; };
 		089E66442BB1F31E00B83D33 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 089E66432BB1F31E00B83D33 /* Assets.xcassets */; };
 		089E66472BB1F31E00B83D33 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 089E66462BB1F31E00B83D33 /* Base */; };
+		08C5512C2BB48F5300A0829E /* CommunityComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C5512B2BB48F5300A0829E /* CommunityComponent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		089E66432BB1F31E00B83D33 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		089E66462BB1F31E00B83D33 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		089E66482BB1F31E00B83D33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		08C5512B2BB48F5300A0829E /* CommunityComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityComponent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				089E663A2BB1F31D00B83D33 /* AppDelegate.swift */,
 				089E663C2BB1F31D00B83D33 /* SceneDelegate.swift */,
 				089E663E2BB1F31D00B83D33 /* ViewController.swift */,
+				08C5512B2BB48F5300A0829E /* CommunityComponent.swift */,
 				089E66402BB1F31D00B83D33 /* Main.storyboard */,
 				089E66432BB1F31E00B83D33 /* Assets.xcassets */,
 				089E66452BB1F31E00B83D33 /* LaunchScreen.storyboard */,
@@ -141,6 +144,7 @@
 				089E663F2BB1F31D00B83D33 /* ViewController.swift in Sources */,
 				089E663B2BB1F31D00B83D33 /* AppDelegate.swift in Sources */,
 				089E663D2BB1F31D00B83D33 /* SceneDelegate.swift in Sources */,
+				08C5512C2BB48F5300A0829E /* CommunityComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
