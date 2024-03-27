@@ -6,6 +6,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         setupHeader()
         setupSearchBar()
         setupTabs()
+        subHeading(with: "Trending")
     }
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
            super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -103,6 +104,23 @@ class ViewController: UIViewController, UISearchBarDelegate {
             segmentedControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             segmentedControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
             segmentedControl.heightAnchor.constraint(equalToConstant: 32)
+        ])
+    }
+    func subHeading(with text: String) {
+        let headerLabel = UILabel()
+        headerLabel.text = text
+        headerLabel.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        headerLabel.font = UIFont(name: "SFProDisplay-Bold", size: 15)
+        headerLabel.attributedText = NSMutableAttributedString(string: text + " ", attributes: [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
+
+        view.addSubview(headerLabel)
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // Constraints to place the header below the segmented control
+        NSLayoutConstraint.activate([
+            headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            
+            headerLabel.heightAnchor.constraint(equalToConstant: 18)
         ])
     }
 
