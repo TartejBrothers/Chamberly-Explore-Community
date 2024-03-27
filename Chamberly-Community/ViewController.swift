@@ -5,8 +5,17 @@ class ViewController: UIViewController, UISearchBarDelegate {
         super.viewDidLoad()
         setupHeader()
         setupSearchBar()
+        setupTabs()
     }
-    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+           super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+           setupTabs()
+       }
+       
+       required init?(coder: NSCoder) {
+           super.init(coder: coder)
+           setupTabs()
+       }
     func setupHeader() {
         // Create a horizontal stack view for the header
         let headerStackView = UIStackView()
@@ -71,6 +80,29 @@ class ViewController: UIViewController, UISearchBarDelegate {
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 80),
             searchBar.heightAnchor.constraint(equalToConstant: 36)
+        ])
+    }
+    
+    func setupTabs() {
+        let segmentedControl = UISegmentedControl(items: ["All", "My Community", "Explore More"])
+        segmentedControl.selectedSegmentIndex = 0 // Set default selection
+        segmentedControl.backgroundColor = .white
+        segmentedControl.tintColor = UIColor(red: 0.18, green: 0.18, blue: 0.357, alpha: 1)
+        
+        // Remove custom labels to avoid overlap
+        for i in 0..<segmentedControl.numberOfSegments {
+            let segmentView = segmentedControl.subviews[i]
+            segmentView.backgroundColor = .white
+        }
+        
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(segmentedControl)
+        
+        NSLayoutConstraint.activate([
+            segmentedControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            segmentedControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            segmentedControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
+            segmentedControl.heightAnchor.constraint(equalToConstant: 32)
         ])
     }
 
