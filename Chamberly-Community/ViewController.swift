@@ -110,17 +110,19 @@ class ViewController: UIViewController, UISearchBarDelegate {
         let headerLabel = UILabel()
         headerLabel.text = text
         headerLabel.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-        headerLabel.font = UIFont(name: "SFProDisplay-Bold", size: 15)
-        headerLabel.attributedText = NSMutableAttributedString(string: text + " ", attributes: [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
+        headerLabel.font = UIFont.boldSystemFont(ofSize: 10)
+        headerLabel.attributedText = NSMutableAttributedString(string: text, attributes: [
+            NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20), // Set font size and bold
+            NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue // Set underline
+        ])
 
         view.addSubview(headerLabel)
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        // Constraints to place the header below the segmented control
         NSLayoutConstraint.activate([
             headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            
-            headerLabel.heightAnchor.constraint(equalToConstant: 18)
+            headerLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 190),
+            headerLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
 
