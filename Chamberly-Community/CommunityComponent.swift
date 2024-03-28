@@ -4,26 +4,34 @@ class CommunityComponent: UIView {
     // Image view at the top
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "community") // Set image
+        imageView.image = UIImage(named: "communitycomponent") // Set image
         return imageView
     }()
     
-    // Title label with person icon and number of members
+    // Title label for the text
     private let titleLabel: UILabel = {
         let label = UILabel()
-        let attachment = NSTextAttachment()
-        attachment.image = UIImage(systemName: "person.2") // Icon representing a person
-        let attachmentString = NSAttributedString(attachment: attachment)
-        let labelText = NSMutableAttributedString(string: " Control ADHD", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18)])
-        labelText.append(attachmentString)
-        labelText.append(NSAttributedString(string: " 81", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])) // Number of members
-        label.attributedText = labelText
         label.textColor = .black
         label.numberOfLines = 0
         return label
     }()
+    
+    // Label for the "Control ADHD" text
+    private let controlADHDLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Control ADHD"
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        return label
+    }()
+    
+    // Image view for the person icon
+    private let personIconImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "person2")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     // Small text below the title
     private let descriptionLabel: UILabel = {
         let label = UILabel()
@@ -37,7 +45,7 @@ class CommunityComponent: UIView {
     // Join button
     private let joinButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Join", for: .normal)
+        button.setTitle("Join Now", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 5
@@ -57,49 +65,82 @@ class CommunityComponent: UIView {
     private func setupUI() {
         backgroundColor = .white
         
-        // Add subviews
+        // Add subviews with space in between
         addSubview(imageView)
         addSubview(titleLabel)
+        addSubview(controlADHDLabel)
+        addSubview(personIconImageView)
         addSubview(descriptionLabel)
         addSubview(joinButton)
         
-        // Set constraints
+        // Set constraints for image view
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        joinButton.translatesAutoresizingMaskIntoConstraints = false
-        
         NSLayoutConstraint.activate([
-            // Image view constraints
             imageView.topAnchor.constraint(equalTo: topAnchor),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 150),
-            
-            // Title label constraints
+            imageView.heightAnchor.constraint(equalToConstant: 190),
+            imageView.widthAnchor.constraint(equalToConstant: 120)
+        ])
+        
+        // Set constraints for title label
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            titleLabel.heightAnchor.constraint(equalToConstant: 30), // Adjust height as needed
-            
-            // Description label constraints
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            descriptionLabel.widthAnchor.constraint(equalTo: joinButton.widthAnchor), // Match width with join button
-            descriptionLabel.heightAnchor.constraint(equalToConstant: 20), // Adjust height as needed
-            
-            // Join button constraints
-            joinButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 8),
-            joinButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            joinButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-            joinButton.widthAnchor.constraint(equalToConstant: 80),
-            joinButton.heightAnchor.constraint(equalToConstant: 30)
+            titleLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
+        
+        // Set constraints for control ADHD label
+        controlADHDLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            controlADHDLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            controlADHDLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8)
+        ])
+        
+        // Set constraints for person icon image view
+        personIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            personIconImageView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            personIconImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            personIconImageView.widthAnchor.constraint(equalToConstant: 24),
+            personIconImageView.heightAnchor.constraint(equalToConstant: 24)
+        ])
+        
+        // Set constraints for join button
+        joinButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            joinButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            joinButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            joinButton.widthAnchor.constraint(equalToConstant: 100),
+            joinButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        // Set constraints for description label
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            descriptionLabel.trailingAnchor.constraint(equalTo: joinButton.leadingAnchor, constant: 0),
+            descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -8)
+        ])
+        
+        // Ensure the text wraps when covered by the button
+        descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        
+        // Apply styling to the "Join" button
+        joinButton.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.67, alpha: 1.0) // #7A7AAA
+        joinButton.setTitleColor(.white, for: .normal)
+        joinButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        joinButton.setTitle("Join Now", for: .normal)
+        joinButton.layer.cornerRadius = 5
     }
-
 }
 
+
 import SwiftUI
+
 // Create a SwiftUI wrapper for CommunityComponent
 struct CommunityComponentWrapper: UIViewRepresentable {
     func makeUIView(context: Context) -> CommunityComponent {
@@ -116,7 +157,6 @@ struct CommunityComponentWrapper: UIViewRepresentable {
 struct CommunityComponentPreview: PreviewProvider {
     static var previews: some View {
         CommunityComponentWrapper()
-
             .previewDisplayName("CommunityComponent Preview")
     }
 }

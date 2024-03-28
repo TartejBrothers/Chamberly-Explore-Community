@@ -11,13 +11,13 @@ class ViewController: UIViewController, UISearchBarDelegate {
                 view.addSubview(communityComponent)
                 
                 // Add constraints for CommunityComponent
-                communityComponent.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activate([
-                    communityComponent.topAnchor.constraint(equalTo: view.topAnchor, constant: 250),
-                    communityComponent.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-                    communityComponent.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-                    communityComponent.heightAnchor.constraint(equalToConstant: 200)
-                ])
+        communityComponent.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                communityComponent.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 220), // Adjust top anchor
+                communityComponent.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                communityComponent.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+                communityComponent.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20) // Adjust bottom anchor
+            ])
     }
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
            super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -35,23 +35,15 @@ class ViewController: UIViewController, UISearchBarDelegate {
         headerStackView.alignment = .center
         headerStackView.spacing = 8
         
-        // Create a label
         let label = UILabel()
         label.text = "Communities"
         label.font = UIFont.systemFont(ofSize: 30)
         label.textAlignment = .left
-        
-        // Add label to the header stack view
+
         headerStackView.addArrangedSubview(label)
-        
-        // Create an image view
         let imageView = UIImageView(image: UIImage(named: "pfp"))
-        imageView.contentMode = .scaleAspectFit // Set content mode to maintain aspect ratio
-        
-        // Add image view to the header stack view
+        imageView.contentMode = .scaleAspectFit
         headerStackView.addArrangedSubview(imageView)
-        
-        // Add the header stack view to the view
         headerStackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerStackView)
         
@@ -60,11 +52,11 @@ class ViewController: UIViewController, UISearchBarDelegate {
             headerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             headerStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             
-            // Constraints for the image view (community icon)
-            imageView.widthAnchor.constraint(equalToConstant: 30), // Set width
-            imageView.heightAnchor.constraint(equalToConstant: 30), // Set height
-            imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30), // Distance from top
-            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30) // Distance from trailing edge
+           
+            imageView.widthAnchor.constraint(equalToConstant: 30),
+            imageView.heightAnchor.constraint(equalToConstant: 30),
+            imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30)
         ])
     }
 
@@ -76,7 +68,6 @@ class ViewController: UIViewController, UISearchBarDelegate {
         searchBar.backgroundColor = UIColor(red: 0.946, green: 0.926, blue: 0.989, alpha: 1)
         searchBar.layer.cornerRadius = 10
         
-        // Remove default border from search bar
         searchBar.backgroundImage = UIImage()
         
         // Set clear background for search field to remove additional lines
