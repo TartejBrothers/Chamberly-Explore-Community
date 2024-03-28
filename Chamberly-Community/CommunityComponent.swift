@@ -56,8 +56,6 @@ class CommunityComponent: UIView {
     
     private func setupUI() {
         backgroundColor = .white
-        layer.borderWidth = 1
-        layer.borderColor = UIColor.black.cgColor
         
         // Add subviews
         addSubview(imageView)
@@ -82,11 +80,13 @@ class CommunityComponent: UIView {
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            titleLabel.heightAnchor.constraint(equalToConstant: 30), // Adjust height as needed
             
             // Description label constraints
             descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
             descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            descriptionLabel.widthAnchor.constraint(equalTo: joinButton.widthAnchor), // Match width with join button
+            descriptionLabel.heightAnchor.constraint(equalToConstant: 20), // Adjust height as needed
             
             // Join button constraints
             joinButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 8),
@@ -96,6 +96,7 @@ class CommunityComponent: UIView {
             joinButton.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
+
 }
 
 import SwiftUI

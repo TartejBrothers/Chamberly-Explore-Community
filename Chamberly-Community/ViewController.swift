@@ -8,7 +8,16 @@ class ViewController: UIViewController, UISearchBarDelegate {
         setupTabs()
         subHeading(with: "Trending")
         let communityComponent = CommunityComponent()
-        view.addSubview(communityComponent)
+                view.addSubview(communityComponent)
+                
+                // Add constraints for CommunityComponent
+                communityComponent.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    communityComponent.topAnchor.constraint(equalTo: view.topAnchor, constant: 250),
+                    communityComponent.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                    communityComponent.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+                    communityComponent.heightAnchor.constraint(equalToConstant: 200)
+                ])
     }
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
            super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -37,6 +46,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         
         // Create an image view
         let imageView = UIImageView(image: UIImage(named: "pfp"))
+        imageView.contentMode = .scaleAspectFit // Set content mode to maintain aspect ratio
         
         // Add image view to the header stack view
         headerStackView.addArrangedSubview(imageView)
@@ -49,8 +59,15 @@ class ViewController: UIViewController, UISearchBarDelegate {
             headerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             headerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             headerStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            
+            // Constraints for the image view (community icon)
+            imageView.widthAnchor.constraint(equalToConstant: 30), // Set width
+            imageView.heightAnchor.constraint(equalToConstant: 30), // Set height
+            imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30), // Distance from top
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30) // Distance from trailing edge
         ])
     }
+
     
     func setupSearchBar() {
         let searchBar = UISearchBar()
