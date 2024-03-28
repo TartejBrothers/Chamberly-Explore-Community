@@ -16,11 +16,10 @@ class CommunityComponent: UIView {
         return label
     }()
     
-    // Label for the "Control ADHD" text
     private let controlADHDLabel: UILabel = {
         let label = UILabel()
         label.text = "Control ADHD"
-        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.font = UIFont.italicSystemFont(ofSize: 28)
         return label
     }()
     
@@ -32,12 +31,23 @@ class CommunityComponent: UIView {
         return imageView
     }()
     
+    // Label for the "81" text
+    private let membersLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor(red: 0.69, green: 0.69, blue: 0.792, alpha: 1)
+        label.font = UIFont(name: "SFProDisplay-Regular", size: 20)
+    
+        label.text = "81\n"
+        label.textAlignment = .left
+        return label
+    }()
+    
     // Small text below the title
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit." // Set bottom text
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .black
+        label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        label.font = UIFont.italicSystemFont(ofSize: 14)
+        label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         label.numberOfLines = 0
         return label
     }()
@@ -70,6 +80,7 @@ class CommunityComponent: UIView {
         addSubview(titleLabel)
         addSubview(controlADHDLabel)
         addSubview(personIconImageView)
+        addSubview(membersLabel)
         addSubview(descriptionLabel)
         addSubview(joinButton)
         
@@ -103,9 +114,16 @@ class CommunityComponent: UIView {
         personIconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             personIconImageView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-            personIconImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            personIconImageView.widthAnchor.constraint(equalToConstant: 24),
-            personIconImageView.heightAnchor.constraint(equalToConstant: 24)
+            personIconImageView.trailingAnchor.constraint(equalTo: membersLabel.leadingAnchor, constant: -8),
+            personIconImageView.widthAnchor.constraint(equalToConstant: 40),
+            personIconImageView.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        
+        // Set constraints for members label
+        membersLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            membersLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            membersLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
         ])
         
         // Set constraints for join button
@@ -126,7 +144,6 @@ class CommunityComponent: UIView {
             descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -8)
         ])
         
-        // Ensure the text wraps when covered by the button
         descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         
         // Apply styling to the "Join" button
@@ -135,6 +152,7 @@ class CommunityComponent: UIView {
         joinButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         joinButton.setTitle("Join Now", for: .normal)
         joinButton.layer.cornerRadius = 5
+        
     }
 }
 
