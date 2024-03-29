@@ -1,33 +1,40 @@
 import UIKit
 
 class ViewController: UIViewController, UISearchBarDelegate {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupHeader()
         setupSearchBar()
         setupTabs()
         subHeading(with: "Trending")
-        let communityComponent = CommunityComponent()
-                view.addSubview(communityComponent)
-                
-                // Add constraints for CommunityComponent
-        communityComponent.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                communityComponent.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 220), // Adjust top anchor
-                communityComponent.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-                communityComponent.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-                communityComponent.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20) // Adjust bottom anchor
-            ])
+        setupCommunityComponent()
     }
+    
+    func setupCommunityComponent() {
+        let communityComponent = CommunityComponent()
+        view.addSubview(communityComponent)
+        
+        // Add constraints for CommunityComponent
+        communityComponent.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            communityComponent.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 220), // Adjust top anchor
+            communityComponent.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            communityComponent.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            communityComponent.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20) // Adjust bottom anchor
+        ])
+    }
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-           super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-           setupTabs()
-       }
-       
-       required init?(coder: NSCoder) {
-           super.init(coder: coder)
-           setupTabs()
-       }
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        setupTabs()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupTabs()
+    }
+    
     func setupHeader() {
         // Create a horizontal stack view for the header
         let headerStackView = UIStackView()
@@ -39,7 +46,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         label.text = "Communities"
         label.font = UIFont.systemFont(ofSize: 30)
         label.textAlignment = .left
-
+        
         headerStackView.addArrangedSubview(label)
         let imageView = UIImageView(image: UIImage(named: "pfp"))
         imageView.contentMode = .scaleAspectFit
@@ -52,14 +59,13 @@ class ViewController: UIViewController, UISearchBarDelegate {
             headerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             headerStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             
-           
             imageView.widthAnchor.constraint(equalToConstant: 30),
             imageView.heightAnchor.constraint(equalToConstant: 30),
             imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30)
         ])
     }
-
+    
     
     func setupSearchBar() {
         let searchBar = UISearchBar()
@@ -116,6 +122,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
             segmentedControl.heightAnchor.constraint(equalToConstant: 32)
         ])
     }
+    
     func subHeading(with text: String) {
         let headerLabel = UILabel()
         headerLabel.text = text
@@ -125,17 +132,16 @@ class ViewController: UIViewController, UISearchBarDelegate {
             NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20), // Set font size and bold
             NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue // Set underline
         ])
-
+        
         view.addSubview(headerLabel)
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
-
+        
         NSLayoutConstraint.activate([
             headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             headerLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 190),
             headerLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
-
 }
 
 #if DEBUG
@@ -162,3 +168,4 @@ struct ViewController_Preview: PreviewProvider {
     }
 }
 #endif
+
