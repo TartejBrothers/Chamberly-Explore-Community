@@ -7,23 +7,83 @@ class ViewController: UIViewController, UISearchBarDelegate {
         setupHeader()
         setupSearchBar()
         setupTabs()
-        subHeading(with: "Trending")
-        setupCommunityComponent()
+        setupTrending()
+        setupCommunityComponents()
     }
     
-    func setupCommunityComponent() {
-        let communityComponent = CommunityComponent()
-        view.addSubview(communityComponent)
-        
-        // Add constraints for CommunityComponent
-        communityComponent.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            communityComponent.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 220), // Adjust top anchor
-            communityComponent.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            communityComponent.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            communityComponent.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20) // Adjust bottom anchor
-        ])
+    func setupTrending() {
+        subHeading(with: "Trending")
     }
+    
+    func setupCommunityComponents() {
+        // Create a scroll view to hold all community components
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        
+        // Add constraints for the scroll view
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 220),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor) // Adjust this constraint as needed
+        ])
+        
+        // Create a stack view inside the scroll view to hold the community components horizontally
+        let communityStackView = UIStackView()
+        communityStackView.axis = .horizontal
+        communityStackView.spacing = 8
+        communityStackView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(communityStackView)
+        
+        // Add constraints for the stack view
+        NSLayoutConstraint.activate([
+            communityStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            communityStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            communityStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            communityStackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor) // Match the height of the scroll view
+        ])
+        
+        // Define the width of each community component
+        let componentWidth = UIScreen.main.bounds.width * 0.8
+        
+        // Add community components to the stack view
+        for _ in 1...5 {
+            // Create a scroll view for each community component
+            let componentScrollView = UIScrollView()
+            componentScrollView.translatesAutoresizingMaskIntoConstraints = false
+            componentScrollView.backgroundColor = .clear
+            componentScrollView.layer.cornerRadius = 10
+            communityStackView.addArrangedSubview(componentScrollView)
+            
+            // Add constraints for the component scroll view
+            NSLayoutConstraint.activate([
+                componentScrollView.widthAnchor.constraint(equalToConstant: componentWidth),
+                componentScrollView.heightAnchor.constraint(equalTo: scrollView.heightAnchor) // Match the height of the scroll view
+            ])
+            
+            // Create a community component inside the component scroll view
+            let communityComponent = CommunityComponent()
+            communityComponent.translatesAutoresizingMaskIntoConstraints = false
+            componentScrollView.addSubview(communityComponent)
+            
+            // Add constraints for the community component
+            NSLayoutConstraint.activate([
+                communityComponent.leadingAnchor.constraint(equalTo: componentScrollView.leadingAnchor),
+                communityComponent.trailingAnchor.constraint(equalTo: componentScrollView.trailingAnchor),
+                communityComponent.topAnchor.constraint(equalTo: componentScrollView.topAnchor),
+                communityComponent.bottomAnchor.constraint(equalTo: componentScrollView.bottomAnchor),
+                communityComponent.widthAnchor.constraint(equalTo: componentScrollView.widthAnchor)
+            ])
+        }
+        
+        // Calculate the content width of the stack view
+        let contentWidth = CGFloat(5) * (componentWidth + 8) // 8 is the spacing between components
+        
+        // Set the content size of the stack view
+        communityStackView.widthAnchor.constraint(equalToConstant: contentWidth).isActive = true
+    }
+
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -143,6 +203,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         ])
     }
 }
+
 
 #if DEBUG
 import SwiftUI
