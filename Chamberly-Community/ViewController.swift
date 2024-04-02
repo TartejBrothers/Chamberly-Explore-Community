@@ -8,14 +8,22 @@ class ViewController: UIViewController, UISearchBarDelegate {
         setupSearchBar()
         setupTabs()
         setupTrending()
-        setupCommunityComponents()
+        setupRecommendations()
+        
     }
     
+
     func setupTrending() {
         subHeading(with: "Trending")
+        setupCommunityComponents(topAnchorConstant: 220)
     }
-    
-    func setupCommunityComponents() {
+
+    func setupRecommendations() {
+        subHeading(with: "Recommendations")
+        setupCommunityComponents(topAnchorConstant: 460)
+    }
+
+    func setupCommunityComponents(topAnchorConstant: CGFloat) {
         // Define the width of each community component
         let componentWidth = UIScreen.main.bounds.width * 0.8
         
@@ -28,7 +36,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 220),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor) // Adjust this constraint as needed
         ])
         
