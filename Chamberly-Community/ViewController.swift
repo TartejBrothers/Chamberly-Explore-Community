@@ -14,16 +14,16 @@ class ViewController: UIViewController, UISearchBarDelegate {
     
 
     func setupTrending() {
-        subHeading(with: "Trending")
-        setupCommunityComponents(topAnchorConstant: 220)
+        let trendingSubheading = subHeading(with: "Trending", topAnchorConstant: 220)
+        setupCommunityComponents(topAnchorConstant: 220, subHeadingLabel: trendingSubheading)
     }
 
     func setupRecommendations() {
-        subHeading(with: "Recommendations")
-        setupCommunityComponents(topAnchorConstant: 460)
+        let recommendationsSubheading = subHeading(with: "Recommendations", topAnchorConstant: 590)
+        setupCommunityComponents(topAnchorConstant: 590, subHeadingLabel: recommendationsSubheading)
     }
 
-    func setupCommunityComponents(topAnchorConstant: CGFloat) {
+    func setupCommunityComponents(topAnchorConstant: CGFloat, subHeadingLabel: UILabel) {
         // Define the width of each community component
         let componentWidth = UIScreen.main.bounds.width * 0.8
         
@@ -60,6 +60,13 @@ class ViewController: UIViewController, UISearchBarDelegate {
         
         // Set the content size of the scrollView for horizontal scrolling
         scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
+        
+        // Add constraints for the subheading label
+        NSLayoutConstraint.activate([
+            subHeadingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            subHeadingLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant - 30), // Adjust this constant based on your layout
+            subHeadingLabel.heightAnchor.constraint(equalToConstant: 20)
+        ])
     }
 
 
@@ -162,7 +169,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         ])
     }
     
-    func subHeading(with text: String) {
+    func subHeading(with text: String, topAnchorConstant: CGFloat) -> UILabel {
         let headerLabel = UILabel()
         headerLabel.text = text
         headerLabel.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
@@ -177,9 +184,11 @@ class ViewController: UIViewController, UISearchBarDelegate {
         
         NSLayoutConstraint.activate([
             headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            headerLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 190),
+            headerLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant - 30), // Adjust this constant based on your layout
             headerLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
+        
+        return headerLabel
     }
 }
 
@@ -208,4 +217,3 @@ struct ViewController_Preview: PreviewProvider {
     }
 }
 #endif
-
