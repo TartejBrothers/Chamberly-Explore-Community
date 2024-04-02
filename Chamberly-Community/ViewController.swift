@@ -16,7 +16,10 @@ class ViewController: UIViewController, UISearchBarDelegate {
     }
     
     func setupCommunityComponents() {
-        // Create a scroll view to hold all community components
+        // Define the width of each community component
+        let componentWidth = UIScreen.main.bounds.width * 0.8
+        
+        // Create a scroll view
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
@@ -29,60 +32,28 @@ class ViewController: UIViewController, UISearchBarDelegate {
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor) // Adjust this constraint as needed
         ])
         
-        // Create a stack view inside the scroll view to hold the community components horizontally
+        // Create a stack view inside the scroll view to hold the community components
         let communityStackView = UIStackView()
         communityStackView.axis = .horizontal
         communityStackView.spacing = 8
         communityStackView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(communityStackView)
         
-        // Add constraints for the stack view
-        NSLayoutConstraint.activate([
-            communityStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            communityStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            communityStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            communityStackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor) // Match the height of the scroll view
-        ])
-        
-        // Define the width of each community component
-        let componentWidth = UIScreen.main.bounds.width * 0.8
-        
         // Add community components to the stack view
         for _ in 1...5 {
-            // Create a scroll view for each community component
-            let componentScrollView = UIScrollView()
-            componentScrollView.translatesAutoresizingMaskIntoConstraints = false
-            componentScrollView.backgroundColor = .clear
-            componentScrollView.layer.cornerRadius = 10
-            communityStackView.addArrangedSubview(componentScrollView)
-            
-            // Add constraints for the component scroll view
-            NSLayoutConstraint.activate([
-                componentScrollView.widthAnchor.constraint(equalToConstant: componentWidth),
-                componentScrollView.heightAnchor.constraint(equalTo: scrollView.heightAnchor) // Match the height of the scroll view
-            ])
-            
-            // Create a community component inside the component scroll view
             let communityComponent = CommunityComponent()
             communityComponent.translatesAutoresizingMaskIntoConstraints = false
-            componentScrollView.addSubview(communityComponent)
-            
-            // Add constraints for the community component
-            NSLayoutConstraint.activate([
-                communityComponent.leadingAnchor.constraint(equalTo: componentScrollView.leadingAnchor),
-                communityComponent.trailingAnchor.constraint(equalTo: componentScrollView.trailingAnchor),
-                communityComponent.topAnchor.constraint(equalTo: componentScrollView.topAnchor),
-                communityComponent.bottomAnchor.constraint(equalTo: componentScrollView.bottomAnchor),
-                communityComponent.widthAnchor.constraint(equalTo: componentScrollView.widthAnchor)
-            ])
+            communityComponent.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
+            communityStackView.addArrangedSubview(communityComponent)
         }
         
-        // Calculate the content width of the stack view
-        let contentWidth = CGFloat(5) * (componentWidth + 8) // 8 is the spacing between components
+        // Calculate the total width of the communityStackView
+        let totalWidth = CGFloat(5) * (componentWidth + 8) // 8 is the spacing between components
         
-        // Set the content size of the stack view
-        communityStackView.widthAnchor.constraint(equalToConstant: contentWidth).isActive = true
+        // Set the content size of the scrollView for horizontal scrolling
+        scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
     }
+
 
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
