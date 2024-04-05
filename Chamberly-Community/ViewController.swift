@@ -38,10 +38,12 @@ class ViewController: UIViewController, UISearchBarDelegate {
 
         setupTrending(in: contentView)
         setupRecommendations(in: contentView)
+        setupMyCommunity(in: contentView)
+        setupExplore(in: contentView)
 
         // Set content size of scroll view
         let contentWidth = UIScreen.main.bounds.width
-        let contentHeight: CGFloat = 1000 // Adjust height as needed
+        let contentHeight: CGFloat = 1700 // Adjust height as needed
         contentView.widthAnchor.constraint(equalToConstant: contentWidth).isActive = true
         contentView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
     }
@@ -55,6 +57,15 @@ class ViewController: UIViewController, UISearchBarDelegate {
     func setupRecommendations(in view: UIView) {
         let recommendationsSubheading = subHeading(with: "Recommendations", topAnchorConstant: 420, in: view)
         setupCommunityComponents(topAnchorConstant: 420, subHeadingLabel: recommendationsSubheading, in: view)
+    }
+    func setupMyCommunity(in view: UIView) {
+        let recommendationsSubheading = subHeading(with: "My Community", topAnchorConstant: 770, in: view)
+        setupCommunityComponents(topAnchorConstant: 770, subHeadingLabel: recommendationsSubheading, in: view)
+        setupCommunityComponents(topAnchorConstant: 1080, subHeadingLabel: recommendationsSubheading, in: view)
+    }
+    func setupExplore(in view: UIView) {
+        let recommendationsSubheading = subHeading(with: "Recommendations", topAnchorConstant: 1420, in: view)
+        setupCommunityComponents(topAnchorConstant: 1420, subHeadingLabel: recommendationsSubheading, in: view)
     }
 
     func setupCommunityComponents(topAnchorConstant: CGFloat, subHeadingLabel: UILabel, in view: UIView) {
