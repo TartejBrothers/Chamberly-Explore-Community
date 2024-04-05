@@ -127,6 +127,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         
         // Set the content size of the scrollView for horizontal scrolling
         scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
+        scrollView.showsHorizontalScrollIndicator = false
         
         // Add constraints for the subheading label
         NSLayoutConstraint.activate([
