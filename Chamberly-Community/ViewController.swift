@@ -12,6 +12,9 @@ class ViewController: UIViewController, UISearchBarDelegate {
     var myCommunitySubheading: UILabel?
     var exploreSubheading: UILabel?
     
+    var communityStackView1: UIStackView? // Declare here
+    var communityStackView2: UIStackView? // Declare here
+    
     var selectedTabIndex = 0 // Default selected tab index
 
     override func viewDidLoad() {
@@ -75,10 +78,10 @@ class ViewController: UIViewController, UISearchBarDelegate {
     func setupMyCommunity(in view: UIView) -> UIStackView {
         myCommunitySubheading = subHeading(with: "My Community", topAnchorConstant: 770, in: view)
         
-        let communityStackView1 = setupCommunityComponents(topAnchorConstant: 770, subHeadingLabel: myCommunitySubheading!, in: view)
-        let communityStackView2 = setupCommunityComponents(topAnchorConstant: 1080, subHeadingLabel: myCommunitySubheading!, in: view)
+        communityStackView1 = setupCommunityComponents(topAnchorConstant: 770, subHeadingLabel: myCommunitySubheading!, in: view)
+        communityStackView2 = setupCommunityComponents(topAnchorConstant: 1080, subHeadingLabel: myCommunitySubheading!, in: view)
         
-        return communityStackView1
+        return communityStackView1!
     }
 
 
@@ -156,6 +159,9 @@ class ViewController: UIViewController, UISearchBarDelegate {
             } else {
                 exploreSubheading?.isHidden = false
             }
+            // Show both communityStackViews
+            communityStackView1?.isHidden = false
+            communityStackView2?.isHidden = false
         case 1:
             trendingStackView?.isHidden = true
             recommendationsStackView?.isHidden = true
@@ -167,6 +173,9 @@ class ViewController: UIViewController, UISearchBarDelegate {
             exploreSubheading?.isHidden = true
             // Ensure my community subheading is visible if there's content
             myCommunitySubheading?.isHidden = myCommunityStackView?.subviews.isEmpty ?? true
+            // Show only the first communityStackView
+            communityStackView1?.isHidden = false
+            communityStackView2?.isHidden = false
         case 2:
             trendingStackView?.isHidden = true
             recommendationsStackView?.isHidden = true
@@ -178,10 +187,14 @@ class ViewController: UIViewController, UISearchBarDelegate {
             myCommunitySubheading?.isHidden = true
             // Ensure explore more subheading is visible if there's content
             exploreSubheading?.isHidden = exploreStackView?.subviews.isEmpty ?? true
+            // Hide both communityStackViews
+            communityStackView1?.isHidden = true
+            communityStackView2?.isHidden = true
         default:
             break
         }
     }
+
 
 
     // Your other setup methods remain unchanged
