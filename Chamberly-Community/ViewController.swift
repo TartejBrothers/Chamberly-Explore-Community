@@ -2,6 +2,21 @@ import UIKit
 
 class ViewController: UIViewController, UISearchBarDelegate {
 
+    var trendingStackView: UIStackView?
+    var recommendationsStackView: UIStackView?
+    var myCommunityStackView: UIStackView?
+    var exploreStackView: UIStackView?
+    
+    var trendingSubheading: UILabel?
+    var recommendationsSubheading: UILabel?
+    var myCommunitySubheading: UILabel?
+    var exploreSubheading: UILabel?
+    
+    var communityStackView1: UIStackView? // Declare here
+    var communityStackView2: UIStackView? // Declare here
+    
+    var selectedTabIndex = 0 // Default selected tab index
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -21,7 +36,6 @@ class ViewController: UIViewController, UISearchBarDelegate {
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 180), // Adjust top spacing
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            
         ])
 
         let contentView = UIView()
@@ -36,39 +50,47 @@ class ViewController: UIViewController, UISearchBarDelegate {
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
 
-        setupTrending(in: contentView)
-        setupRecommendations(in: contentView)
-        setupMyCommunity(in: contentView)
-        setupExplore(in: contentView)
+        trendingStackView = setupTrending(in: contentView)
+        recommendationsStackView = setupRecommendations(in: contentView)
+        myCommunityStackView = setupMyCommunity(in: contentView)
+        exploreStackView = setupExplore(in: contentView)
 
         // Set content size of scroll view
         let contentWidth = UIScreen.main.bounds.width
-        let contentHeight: CGFloat = 1700 // Adjust height as needed
+        let contentHeight: CGFloat = 1750 // Adjust height as needed
         contentView.widthAnchor.constraint(equalToConstant: contentWidth).isActive = true
         contentView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
+
+        // Show content based on the selected tab index
+        showContent(for: selectedTabIndex)
     }
 
-    func setupTrending(in view: UIView) {
-        let trendingSubheading = subHeading(with: "Trending", topAnchorConstant: 70, in: view)
+    func setupTrending(in view: UIView) -> UIStackView {
+        trendingSubheading = subHeading(with: "Trending", topAnchorConstant: 70, in: view)
+        return setupCommunityComponents(topAnchorConstant: 50, subHeadingLabel: trendingSubheading!, in: view)
+    }
+
+    func setupRecommendations(in view: UIView) -> UIStackView {
+        recommendationsSubheading = subHeading(with: "Recommendations", topAnchorConstant: 420, in: view)
+        return setupCommunityComponents(topAnchorConstant: 420, subHeadingLabel: recommendationsSubheading!, in: view)
+    }
+    
+    func setupMyCommunity(in view: UIView) -> UIStackView {
+        myCommunitySubheading = subHeading(with: "My Community", topAnchorConstant: 770, in: view)
         
-        setupCommunityComponents(topAnchorConstant: 50, subHeadingLabel: trendingSubheading, in: view)
+        communityStackView1 = setupCommunityComponents(topAnchorConstant: 770, subHeadingLabel: myCommunitySubheading!, in: view)
+        communityStackView2 = setupCommunityComponents(topAnchorConstant: 1080, subHeadingLabel: myCommunitySubheading!, in: view)
+        
+        return communityStackView1!
     }
 
-    func setupRecommendations(in view: UIView) {
-        let recommendationsSubheading = subHeading(with: "Recommendations", topAnchorConstant: 420, in: view)
-        setupCommunityComponents(topAnchorConstant: 420, subHeadingLabel: recommendationsSubheading, in: view)
-    }
-    func setupMyCommunity(in view: UIView) {
-        let recommendationsSubheading = subHeading(with: "My Community", topAnchorConstant: 770, in: view)
-        setupCommunityComponents(topAnchorConstant: 770, subHeadingLabel: recommendationsSubheading, in: view)
-        setupCommunityComponents(topAnchorConstant: 1080, subHeadingLabel: recommendationsSubheading, in: view)
-    }
-    func setupExplore(in view: UIView) {
-        let recommendationsSubheading = subHeading(with: "Recommendations", topAnchorConstant: 1420, in: view)
-        setupCommunityComponents(topAnchorConstant: 1420, subHeadingLabel: recommendationsSubheading, in: view)
-    }
 
-    func setupCommunityComponents(topAnchorConstant: CGFloat, subHeadingLabel: UILabel, in view: UIView) {
+    func setupExplore(in view: UIView) -> UIStackView {
+        exploreSubheading = subHeading(with: "Explore More", topAnchorConstant: 1420, in: view)
+        return setupCommunityComponents(topAnchorConstant: 1420, subHeadingLabel: exploreSubheading!, in: view)
+    }
+    
+    func setupCommunityComponents(topAnchorConstant: CGFloat, subHeadingLabel: UILabel, in view: UIView) -> UIStackView {
         // Define the width of each community component
         let componentWidth = UIScreen.main.bounds.width * 0.8
         
@@ -105,6 +127,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         
         // Set the content size of the scrollView for horizontal scrolling
         scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
+        scrollView.showsHorizontalScrollIndicator = false
         
         // Add constraints for the subheading label
         NSLayoutConstraint.activate([
@@ -112,7 +135,70 @@ class ViewController: UIViewController, UISearchBarDelegate {
             subHeadingLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant - 30), // Adjust this constant based on your layout
             subHeadingLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
+        
+        return communityStackView
     }
+
+
+    func showContent(for index: Int) {
+        switch index {
+        case 0:
+            trendingStackView?.isHidden = false
+            recommendationsStackView?.isHidden = false
+            myCommunityStackView?.isHidden = false
+            exploreStackView?.isHidden = false
+            // Ensure all subheadings are visible
+            trendingSubheading?.isHidden = false
+            recommendationsSubheading?.isHidden = false
+            if myCommunityStackView?.subviews.isEmpty ?? true {
+                myCommunitySubheading?.isHidden = true
+            } else {
+                myCommunitySubheading?.isHidden = false
+            }
+            if exploreStackView?.subviews.isEmpty ?? true {
+                exploreSubheading?.isHidden = true
+            } else {
+                exploreSubheading?.isHidden = false
+            }
+            // Show both communityStackViews
+            communityStackView1?.isHidden = false
+            communityStackView2?.isHidden = false
+        case 1:
+            trendingStackView?.isHidden = true
+            recommendationsStackView?.isHidden = true
+            myCommunityStackView?.isHidden = false
+            exploreStackView?.isHidden = true
+            // Hide unnecessary subheadings
+            trendingSubheading?.isHidden = true
+            recommendationsSubheading?.isHidden = true
+            exploreSubheading?.isHidden = true
+            // Ensure my community subheading is visible if there's content
+            myCommunitySubheading?.isHidden = myCommunityStackView?.subviews.isEmpty ?? true
+            // Show only the first communityStackView
+            communityStackView1?.isHidden = false
+            communityStackView2?.isHidden = false
+        case 2:
+            trendingStackView?.isHidden = true
+            recommendationsStackView?.isHidden = true
+            myCommunityStackView?.isHidden = true
+            exploreStackView?.isHidden = false
+            // Hide unnecessary subheadings
+            trendingSubheading?.isHidden = true
+            recommendationsSubheading?.isHidden = true
+            myCommunitySubheading?.isHidden = true
+            // Ensure explore more subheading is visible if there's content
+            exploreSubheading?.isHidden = exploreStackView?.subviews.isEmpty ?? true
+            // Hide both communityStackViews
+            communityStackView1?.isHidden = true
+            communityStackView2?.isHidden = true
+        default:
+            break
+        }
+    }
+
+
+
+    // Your other setup methods remain unchanged
 
     func setupHeader(in view: UIView) {
         // Create a horizontal stack view for the header
@@ -139,7 +225,6 @@ class ViewController: UIViewController, UISearchBarDelegate {
             headerStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20)
         ])
     }
-
 
     func setupSearchBar(in view: UIView) {
         let searchBar = UISearchBar()
@@ -179,6 +264,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         segmentedControl.selectedSegmentIndex = 0 // Set default selection
         segmentedControl.backgroundColor = .white
         segmentedControl.tintColor = UIColor(red: 0.18, green: 0.18, blue: 0.357, alpha: 1)
+        segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
 
         // Remove custom labels to avoid overlap
         for i in 0..<segmentedControl.numberOfSegments {
@@ -195,6 +281,11 @@ class ViewController: UIViewController, UISearchBarDelegate {
             segmentedControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
             segmentedControl.heightAnchor.constraint(equalToConstant: 32)
         ])
+    }
+
+    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        selectedTabIndex = sender.selectedSegmentIndex
+        showContent(for: selectedTabIndex)
     }
 
     func subHeading(with text: String, topAnchorConstant: CGFloat, in view: UIView) -> UILabel {
