@@ -1,6 +1,37 @@
 import UIKit
 
 class CommunityComponent: UIView {
+    // Properties for dynamic content
+    var controlADHDLabelText: String = "" {
+        didSet {
+            controlADHDLabel.text = controlADHDLabelText
+        }
+    }
+    
+    var personIconImage: UIImage? {
+        didSet {
+            personIconImageView.image = personIconImage
+        }
+    }
+    
+    var membersLabelText: String = "" {
+        didSet {
+            membersLabel.text = membersLabelText
+        }
+    }
+    
+    var descriptionLabelText: String = "" {
+        didSet {
+            descriptionLabel.text = descriptionLabelText
+        }
+    }
+    
+    var joinButtonTitle: String = "" {
+        didSet {
+            joinButton.setTitle(joinButtonTitle, for: .normal)
+        }
+    }
+    
     // Image view at the top
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -18,7 +49,6 @@ class CommunityComponent: UIView {
     
     private let controlADHDLabel: UILabel = {
         let label = UILabel()
-        label.text = "Control ADHD"
         label.font = UIFont.italicSystemFont(ofSize: 28)
         return label
     }()
@@ -26,7 +56,6 @@ class CommunityComponent: UIView {
     // Image view for the person icon
     private let personIconImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "person2")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -36,16 +65,12 @@ class CommunityComponent: UIView {
         let label = UILabel()
         label.textColor = UIColor(red: 0.69, green: 0.69, blue: 0.792, alpha: 1)
         label.font = UIFont(name: "SFProDisplay-Regular", size: 20)
-    
-        label.text = "81\n"
-        label.textAlignment = .left
         return label
     }()
     
     // Small text below the title
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
         label.font = UIFont.italicSystemFont(ofSize: 14)
         label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         label.numberOfLines = 0
@@ -53,14 +78,16 @@ class CommunityComponent: UIView {
     }()
     
     // Join button
+    // Join button
     private let joinButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Join Now", for: .normal)
+        button.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 1.0, alpha: 1.0) // #7A7AFF
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         button.layer.cornerRadius = 5
         return button
     }()
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -145,36 +172,32 @@ class CommunityComponent: UIView {
         ])
         
         descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        
-        // Apply styling to the "Join" button
-        joinButton.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.67, alpha: 1.0) // #7A7AAA
-        joinButton.setTitleColor(.white, for: .normal)
-        joinButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        joinButton.setTitle("Join Now", for: .normal)
-        joinButton.layer.cornerRadius = 5
-        
     }
 }
-
 
 import SwiftUI
-
-// Create a SwiftUI wrapper for CommunityComponent
-struct CommunityComponentWrapper: UIViewRepresentable {
-    func makeUIView(context: Context) -> CommunityComponent {
-        return CommunityComponent()
-    }
-
-    func updateUIView(_ uiView: CommunityComponent, context: Context) {
-        // Update the view if needed
-    }
-}
-
 // SwiftUI preview
 @available(iOS 13.0, *)
 struct CommunityComponentPreview: PreviewProvider {
     static var previews: some View {
         CommunityComponentWrapper()
             .previewDisplayName("CommunityComponent Preview")
+    }
+}
+
+// Create a SwiftUI wrapper for CommunityComponent
+struct CommunityComponentWrapper: UIViewRepresentable {
+    func makeUIView(context: Context) -> CommunityComponent {
+        let view = CommunityComponent()
+        view.controlADHDLabelText = "Control ADHD"
+        view.personIconImage = UIImage(named: "person2")
+        view.membersLabelText = "81"
+        view.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        view.joinButtonTitle = "Join Now"
+        return view
+    }
+
+    func updateUIView(_ uiView: CommunityComponent, context: Context) {
+        // Update the view if needed
     }
 }

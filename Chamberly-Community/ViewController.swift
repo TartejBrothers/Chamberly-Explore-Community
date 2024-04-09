@@ -12,20 +12,16 @@ class ViewController: UIViewController, UISearchBarDelegate {
     var myCommunitySubheading: UILabel?
     var exploreSubheading: UILabel?
     
-    var communityStackView1: UIStackView? // Declare here
-    var communityStackView2: UIStackView? // Declare here
+    var communityStackView1: UIStackView?
+    var communityStackView2: UIStackView?
     
-    var selectedTabIndex = 0 // Default selected tab index
+    var selectedTabIndex = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Add top part (header, search bar, tabs)
         setupHeader(in: view)
         setupSearchBar(in: view)
         setupTabs(in: view)
-
-        // Add scroll view for scrollable content
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
@@ -34,7 +30,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 180), // Adjust top spacing
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 180),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
@@ -57,11 +53,9 @@ class ViewController: UIViewController, UISearchBarDelegate {
 
         // Set content size of scroll view
         let contentWidth = UIScreen.main.bounds.width
-        let contentHeight: CGFloat = 1750 // Adjust height as needed
+        let contentHeight: CGFloat = 1750
         contentView.widthAnchor.constraint(equalToConstant: contentWidth).isActive = true
         contentView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
-
-        // Show content based on the selected tab index
         showContent(for: selectedTabIndex)
     }
 
@@ -117,6 +111,12 @@ class ViewController: UIViewController, UISearchBarDelegate {
         // Add community components to the stack view
         for _ in 1...5 {
             let communityComponent = CommunityComponent()
+            communityComponent.controlADHDLabelText = "Control ADHD"
+            communityComponent.personIconImage = UIImage(named: "person2")
+            communityComponent.membersLabelText = "81"
+            communityComponent.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            communityComponent.joinButtonTitle = "Join Now"
+
             communityComponent.translatesAutoresizingMaskIntoConstraints = false
             communityComponent.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
             communityStackView.addArrangedSubview(communityComponent)
@@ -204,27 +204,22 @@ class ViewController: UIViewController, UISearchBarDelegate {
         // Create a horizontal stack view for the header
         let headerStackView = UIStackView()
         headerStackView.axis = .horizontal
-        headerStackView.alignment = .center
-        headerStackView.spacing = 8
-
-        let label = UILabel()
-        label.text = "Communities"
-        label.font = UIFont.systemFont(ofSize: 30)
-        label.textAlignment = .left
-
-        headerStackView.addArrangedSubview(label)
-        let imageView = UIImageView(image: UIImage(named: "pfp"))
+        let communityImage = UIImageView(image: UIImage(named: "Header"))
+        communityImage.contentMode = .scaleAspectFit
+        headerStackView.addArrangedSubview(communityImage)
+        let imageView = UIImageView(image: UIImage(named: "Profile"))
         imageView.contentMode = .scaleAspectFit
         headerStackView.addArrangedSubview(imageView)
         headerStackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerStackView)
 
         NSLayoutConstraint.activate([
-            headerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            headerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -120),
             headerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             headerStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20)
         ])
     }
+
 
     func setupSearchBar(in view: UIView) {
         let searchBar = UISearchBar()
