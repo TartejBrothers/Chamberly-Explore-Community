@@ -151,66 +151,22 @@ class ViewController: UIViewController, UISearchBarDelegate {
             // Scroll to the top
             scrollView.setContentOffset(CGPoint.zero, animated: true)
             // Show all content
-            trendingStackView?.isHidden = false
-            recommendationsStackView?.isHidden = false
-            myCommunityStackView?.isHidden = false
-            exploreStackView?.isHidden = false
-            // Ensure all subheadings are visible
-            trendingSubheading?.isHidden = false
-            recommendationsSubheading?.isHidden = false
-            if myCommunityStackView?.subviews.isEmpty ?? true {
-                myCommunitySubheading?.isHidden = true
-            } else {
-                myCommunitySubheading?.isHidden = false
-            }
-            if exploreStackView?.subviews.isEmpty ?? true {
-                exploreSubheading?.isHidden = true
-            } else {
-                exploreSubheading?.isHidden = false
-            }
-            // Show both communityStackViews
-            communityStackView1?.isHidden = false
-            communityStackView2?.isHidden = false
+            
+
         case 1:
             // Scroll to myCommunityStackView
             if let myCommunitySubheading = myCommunitySubheading {
                 let yOffset = myCommunitySubheading.frame.origin.y
                 scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
             }
-            // Show only my community content
-            trendingStackView?.isHidden = true
-            recommendationsStackView?.isHidden = true
-            myCommunityStackView?.isHidden = false
-            exploreStackView?.isHidden = true
-            // Hide unnecessary subheadings
-            trendingSubheading?.isHidden = true
-            recommendationsSubheading?.isHidden = true
-            exploreSubheading?.isHidden = true
-            // Ensure my community subheading is visible if there's content
-            myCommunitySubheading?.isHidden = myCommunityStackView?.subviews.isEmpty ?? true
-            // Show only the first communityStackView
-            communityStackView1?.isHidden = false
-            communityStackView2?.isHidden = false
+            
         case 2:
             // Scroll to exploreStackView
             if let exploreSubheading = exploreSubheading {
                 let yOffset = exploreSubheading.frame.origin.y
                 scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
             }
-            // Show only explore content
-            trendingStackView?.isHidden = true
-            recommendationsStackView?.isHidden = true
-            myCommunityStackView?.isHidden = true
-            exploreStackView?.isHidden = false
-            // Hide unnecessary subheadings
-            trendingSubheading?.isHidden = true
-            recommendationsSubheading?.isHidden = true
-            myCommunitySubheading?.isHidden = true
-            // Ensure explore more subheading is visible if there's content
-            exploreSubheading?.isHidden = exploreStackView?.subviews.isEmpty ?? true
-            // Hide both communityStackViews
-            communityStackView1?.isHidden = true
-            communityStackView2?.isHidden = true
+            
         default:
             break
         }
