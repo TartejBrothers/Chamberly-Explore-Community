@@ -139,8 +139,8 @@ class ViewController: UIViewController, UISearchBarDelegate {
         communityComponent2.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
         communityComponent2.isJoined = false
 
-        communityComponent.translatesAutoresizingMaskIntoConstraints = false
-        communityComponent.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
+        communityComponent2.translatesAutoresizingMaskIntoConstraints = false
+        communityComponent2.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
         communityStackView.addArrangedSubview(communityComponent2)
         let totalWidth = CGFloat(7) * (componentWidth + 8)
         scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
@@ -153,7 +153,6 @@ class ViewController: UIViewController, UISearchBarDelegate {
         
         return communityStackView
     }
-
 
     func showContent(for index: Int) {
         switch index {
