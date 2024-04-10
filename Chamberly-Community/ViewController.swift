@@ -90,10 +90,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
     }
     
     func setupCommunityComponents(topAnchorConstant: CGFloat, subHeadingLabel: UILabel, in view: UIView) -> UIStackView {
-        // Define the width of each community component
         let componentWidth = UIScreen.main.bounds.width * 0.4
-        
-        // Create a scroll view
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
@@ -120,7 +117,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
             communityComponent.personIconImage = UIImage(named: "person2")
             communityComponent.membersLabelText = "81"
             communityComponent.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            communityComponent.joinButtonTitle = "Join Now"
+            communityComponent.isJoined = false
 
             communityComponent.translatesAutoresizingMaskIntoConstraints = false
             communityComponent.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true

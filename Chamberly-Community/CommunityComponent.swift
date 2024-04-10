@@ -26,9 +26,9 @@ class CommunityComponent: UIView {
         }
     }
     
-    var joinButtonTitle: String = "" {
+    var isJoined: Bool = false {
         didSet {
-            joinButton.setTitle(joinButtonTitle, for: .normal)
+            joinButton.setTitle(isJoined ? "Joined" : "Join Now", for: .normal)
         }
     }
     
@@ -82,9 +82,9 @@ class CommunityComponent: UIView {
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 7)
         button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(joinButtonTapped(_:)), for: .touchUpInside)
         return button
     }()
-
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -168,6 +168,10 @@ class CommunityComponent: UIView {
         
         descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     }
+    
+    @objc private func joinButtonTapped(_ sender: UIButton) {
+        isJoined = !isJoined
+    }
 }
 
 import SwiftUI
@@ -188,7 +192,7 @@ struct CommunityComponentWrapper: UIViewRepresentable {
         view.personIconImage = UIImage(named: "person2")
         view.membersLabelText = "81"
         view.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-        view.joinButtonTitle = "Join Now"
+        view.isJoined = false // Initially not joined
         return view
     }
 
