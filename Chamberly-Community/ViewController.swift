@@ -69,23 +69,23 @@ class ViewController: UIViewController, UISearchBarDelegate {
     }
 
     func setupRecommendations(in view: UIView) -> UIStackView {
-        recommendationsSubheading = subHeading(with: "Recommendations", topAnchorConstant: 250, in: view)
-        return setupCommunityComponents(topAnchorConstant: 230, subHeadingLabel: recommendationsSubheading!, in: view)
+        recommendationsSubheading = subHeading(with: "Recommendations", topAnchorConstant: 270, in: view)
+        return setupCommunityComponents(topAnchorConstant: 250, subHeadingLabel: recommendationsSubheading!, in: view)
     }
     
     func setupMyCommunity(in view: UIView) -> UIStackView {
-        myCommunitySubheading = subHeading(with: "My Community", topAnchorConstant: 450, in: view)
+        myCommunitySubheading = subHeading(with: "My Community", topAnchorConstant: 470, in: view)
         
-        communityStackView1 = setupCommunityComponents(topAnchorConstant: 420, subHeadingLabel: myCommunitySubheading!, in: view)
-        communityStackView2 = setupCommunityComponents(topAnchorConstant: 580, subHeadingLabel: myCommunitySubheading!, in: view)
+        communityStackView1 = setupCommunityComponents(topAnchorConstant: 450, subHeadingLabel: myCommunitySubheading!, in: view)
+        communityStackView2 = setupCommunityComponents(topAnchorConstant: 610, subHeadingLabel: myCommunitySubheading!, in: view)
         
         return communityStackView1!
     }
 
 
     func setupExplore(in view: UIView) -> UIStackView {
-        exploreSubheading = subHeading(with: "Explore More", topAnchorConstant: 800, in: view)
-        return setupCommunityComponents(topAnchorConstant: 780, subHeadingLabel: exploreSubheading!, in: view)
+        exploreSubheading = subHeading(with: "Explore More", topAnchorConstant: 830, in: view)
+        return setupCommunityComponents(topAnchorConstant: 810, subHeadingLabel: exploreSubheading!, in: view)
     }
     
     func setupCommunityComponents(topAnchorConstant: CGFloat, subHeadingLabel: UILabel, in view: UIView) -> UIStackView {
@@ -211,7 +211,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         searchBar.backgroundColor = UIColor(red: 0.946, green: 0.926, blue: 0.989, alpha: 1)
         searchBar.layer.cornerRadius = 10
         searchBar.backgroundImage = UIImage()
-        searchBar.delegate = self 
+        searchBar.delegate = self
 
         if let searchField = searchBar.value(forKey: "searchField") as? UITextField {
             searchField.background = UIImage()
