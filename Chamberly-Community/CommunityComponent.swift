@@ -2,9 +2,9 @@ import UIKit
 
 class CommunityComponent: UIView {
     // Properties for dynamic content
-    var controlADHDLabelText: String = "" {
+    var headingLabelText: String = "" {
         didSet {
-            controlADHDLabel.text = controlADHDLabelText
+            headingLabel.text = headingLabelText
         }
     }
     
@@ -47,7 +47,7 @@ class CommunityComponent: UIView {
         return label
     }()
     
-    private let controlADHDLabel: UILabel = {
+    private let headingLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.italicSystemFont(ofSize: 14)
         return label
@@ -100,7 +100,7 @@ class CommunityComponent: UIView {
         backgroundColor = .white
         addSubview(imageView)
         addSubview(titleLabel)
-        addSubview(controlADHDLabel)
+        addSubview(headingLabel)
         addSubview(personIconImageView)
         addSubview(membersLabel)
         addSubview(descriptionLabel)
@@ -126,10 +126,10 @@ class CommunityComponent: UIView {
         ])
         
         // Set constraints for control ADHD label
-        controlADHDLabel.translatesAutoresizingMaskIntoConstraints = false
+        headingLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            controlADHDLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-            controlADHDLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8)
+            headingLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            headingLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8)
         ])
         
         // Set constraints for person icon image view
@@ -188,7 +188,7 @@ struct CommunityComponentPreview: PreviewProvider {
 struct CommunityComponentWrapper: UIViewRepresentable {
     func makeUIView(context: Context) -> CommunityComponent {
         let view = CommunityComponent()
-        view.controlADHDLabelText = "Control ADHD"
+        view.headingLabelText = "Control ADHD"
         view.personIconImage = UIImage(named: "person2")
         view.membersLabelText = "81"
         view.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
