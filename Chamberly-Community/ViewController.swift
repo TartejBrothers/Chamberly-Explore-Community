@@ -320,6 +320,38 @@ class ViewController: UIViewController, UISearchBarDelegate {
         }
     }
 
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // If the search text is empty, reset the visibility of all CommunityComponent instances
+        if searchText.isEmpty {
+            resetComponentVisibility(in: contentView)
+        }
+    }
+
+    func resetComponentVisibility(in view: UIView) {
+        // Recursive function to reset visibility of all CommunityComponent instances
+        func resetVisibility(in view: UIView) {
+            for subview in view.subviews {
+                if let stackView = subview as? UIStackView {
+                    for arrangedSubview in stackView.arrangedSubviews {
+                        if let communityComponent = arrangedSubview as? CommunityComponent {
+                            communityComponent.isHidden = false
+                        } else {
+                            // Recursively reset visibility within the arranged subview
+                            resetVisibility(in: arrangedSubview)
+                        }
+                    }
+                } else {
+                    // Recursively reset visibility within the subview
+                    resetVisibility(in: subview)
+                }
+            }
+        }
+        
+        // Call the recursive function to reset visibility within contentView
+        resetVisibility(in: contentView)
+    }
+
+
 
 
 }
