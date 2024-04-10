@@ -17,6 +17,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
     
     var selectedTabIndex = 0
     var scrollView: UIScrollView!
+    var contentView: UIView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +38,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
-        let contentView = UIView()
+        contentView = UIView()
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
 
@@ -108,10 +109,19 @@ class ViewController: UIViewController, UISearchBarDelegate {
         communityStackView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(communityStackView)
         
-        // Add community components to the stack view
+        let communityComponent = CommunityComponent()
+        communityComponent.headingLabelText = "Loyalty Doubts"
+        communityComponent.personIconImage = UIImage(named: "person2")
+        communityComponent.membersLabelText = "81"
+        communityComponent.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        communityComponent.isJoined = false
+
+        communityComponent.translatesAutoresizingMaskIntoConstraints = false
+        communityComponent.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
+        communityStackView.addArrangedSubview(communityComponent)
         for _ in 1...5 {
             let communityComponent = CommunityComponent()
-            communityComponent.controlADHDLabelText = "Control ADHD"
+            communityComponent.headingLabelText = "Control ADHD"
             communityComponent.personIconImage = UIImage(named: "person2")
             communityComponent.membersLabelText = "81"
             communityComponent.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
@@ -122,8 +132,17 @@ class ViewController: UIViewController, UISearchBarDelegate {
             communityStackView.addArrangedSubview(communityComponent)
         }
         
-       
-        let totalWidth = CGFloat(5) * (componentWidth + 8)
+        let communityComponent2 = CommunityComponent()
+        communityComponent2.headingLabelText = "Exam Relief"
+        communityComponent2.personIconImage = UIImage(named: "person2")
+        communityComponent2.membersLabelText = "81"
+        communityComponent2.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        communityComponent2.isJoined = false
+
+        communityComponent2.translatesAutoresizingMaskIntoConstraints = false
+        communityComponent2.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
+        communityStackView.addArrangedSubview(communityComponent2)
+        let totalWidth = CGFloat(7) * (componentWidth + 8)
         scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
         scrollView.showsHorizontalScrollIndicator = false
         NSLayoutConstraint.activate([
@@ -135,14 +154,15 @@ class ViewController: UIViewController, UISearchBarDelegate {
         return communityStackView
     }
 
-
     func showContent(for index: Int) {
         switch index {
         case 0:
             // Scroll to the top
             scrollView.setContentOffset(CGPoint.zero, animated: true)
             // Show all content
-            
+            for case let communityComponent as CommunityComponent in contentView.subviews {
+                communityComponent.isHidden = false
+            }
 
         case 1:
             // Scroll to myCommunityStackView
@@ -190,24 +210,15 @@ class ViewController: UIViewController, UISearchBarDelegate {
         searchBar.placeholder = "Search"
         searchBar.backgroundColor = UIColor(red: 0.946, green: 0.926, blue: 0.989, alpha: 1)
         searchBar.layer.cornerRadius = 10
-
         searchBar.backgroundImage = UIImage()
+        searchBar.delegate = self 
 
-        // Set clear background for search field to remove additional lines
         if let searchField = searchBar.value(forKey: "searchField") as? UITextField {
             searchField.background = UIImage()
         }
 
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(searchBar)
-
-        // Add custom search icon on the left side
-        let searchIconView = UIView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
-        let searchImageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
-        searchImageView.tintColor = .black
-        searchImageView.contentMode = .scaleAspectFit
-        searchIconView.addSubview(searchImageView)
-
 
         NSLayoutConstraint.activate([
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -268,6 +279,49 @@ class ViewController: UIViewController, UISearchBarDelegate {
 
         return headerLabel
     }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let searchText = searchBar.text?.lowercased() else { return }
+        
+        var foundMatchingComponent = false
+        
+        // Recursive function to search for CommunityComponent within subviews
+        func findCommunityComponent(in view: UIView) {
+            for subview in view.subviews {
+                if let stackView = subview as? UIStackView {
+                    for arrangedSubview in stackView.arrangedSubviews {
+                        if let communityComponent = arrangedSubview as? CommunityComponent {
+                            let headingText = communityComponent.headingLabelText.lowercased()
+                            let isMatching = headingText.contains(searchText)
+                            communityComponent.isHidden = !isMatching
+                            
+                            // Update the flag if a matching component is found
+                            if isMatching {
+                                foundMatchingComponent = true
+                            }
+                        } else {
+                            // Recursively search for CommunityComponent within the arranged subview
+                            findCommunityComponent(in: arrangedSubview)
+                        }
+                    }
+                } else {
+                    // Recursively search for CommunityComponent within the subview
+                    findCommunityComponent(in: subview)
+                }
+            }
+        }
+        
+        // Call the recursive function to search for CommunityComponent within contentView
+        findCommunityComponent(in: contentView)
+        
+        // If no matching component is found, you might want to display a message or handle it accordingly
+        if !foundMatchingComponent {
+            print("No matching component found.")
+            // You can add additional UI updates or actions here
+        }
+    }
+
+
+
 }
 
 #if DEBUG
