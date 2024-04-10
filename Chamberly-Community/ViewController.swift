@@ -16,13 +16,18 @@ class ViewController: UIViewController, UISearchBarDelegate {
     var communityStackView2: UIStackView?
     
     var selectedTabIndex = 0
+    
+    // Add a reference to the scroll view
+    var scrollView: UIScrollView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupHeader(in: view)
         setupSearchBar(in: view)
         setupTabs(in: view)
-        let scrollView = UIScrollView()
+        
+        // Initialize the scroll view
+        scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
         scrollView.showsVerticalScrollIndicator = false
@@ -143,62 +148,29 @@ class ViewController: UIViewController, UISearchBarDelegate {
     func showContent(for index: Int) {
         switch index {
         case 0:
-            trendingStackView?.isHidden = false
-            recommendationsStackView?.isHidden = false
-            myCommunityStackView?.isHidden = false
-            exploreStackView?.isHidden = false
-            // Ensure all subheadings are visible
-            trendingSubheading?.isHidden = false
-            recommendationsSubheading?.isHidden = false
-            if myCommunityStackView?.subviews.isEmpty ?? true {
-                myCommunitySubheading?.isHidden = true
-            } else {
-                myCommunitySubheading?.isHidden = false
-            }
-            if exploreStackView?.subviews.isEmpty ?? true {
-                exploreSubheading?.isHidden = true
-            } else {
-                exploreSubheading?.isHidden = false
-            }
-            // Show both communityStackViews
-            communityStackView1?.isHidden = false
-            communityStackView2?.isHidden = false
+            // Scroll to the top
+            scrollView.setContentOffset(CGPoint.zero, animated: true)
+            // Show all content
+            
+
         case 1:
-            trendingStackView?.isHidden = true
-            recommendationsStackView?.isHidden = true
-            myCommunityStackView?.isHidden = false
-            exploreStackView?.isHidden = true
-            // Hide unnecessary subheadings
-            trendingSubheading?.isHidden = true
-            recommendationsSubheading?.isHidden = true
-            exploreSubheading?.isHidden = true
-            // Ensure my community subheading is visible if there's content
-            myCommunitySubheading?.isHidden = myCommunityStackView?.subviews.isEmpty ?? true
-            // Show only the first communityStackView
-            communityStackView1?.isHidden = false
-            communityStackView2?.isHidden = false
+            // Scroll to myCommunityStackView
+            if let myCommunitySubheading = myCommunitySubheading {
+                let yOffset = myCommunitySubheading.frame.origin.y
+                scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
+            }
+            
         case 2:
-            trendingStackView?.isHidden = true
-            recommendationsStackView?.isHidden = true
-            myCommunityStackView?.isHidden = true
-            exploreStackView?.isHidden = false
-            // Hide unnecessary subheadings
-            trendingSubheading?.isHidden = true
-            recommendationsSubheading?.isHidden = true
-            myCommunitySubheading?.isHidden = true
-            // Ensure explore more subheading is visible if there's content
-            exploreSubheading?.isHidden = exploreStackView?.subviews.isEmpty ?? true
-            // Hide both communityStackViews
-            communityStackView1?.isHidden = true
-            communityStackView2?.isHidden = true
+            // Scroll to exploreStackView
+            if let exploreSubheading = exploreSubheading {
+                let yOffset = exploreSubheading.frame.origin.y
+                scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
+            }
+            
         default:
             break
         }
     }
-
-
-
-    // Your other setup methods remain unchanged
 
     func setupHeader(in view: UIView) {
         // Create a horizontal stack view for the header
