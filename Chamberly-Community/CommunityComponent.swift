@@ -49,7 +49,7 @@ class CommunityComponent: UIView {
     
     private let controlADHDLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.italicSystemFont(ofSize: 28)
+        label.font = UIFont.italicSystemFont(ofSize: 14)
         return label
     }()
     
@@ -60,30 +60,27 @@ class CommunityComponent: UIView {
         return imageView
     }()
     
-    // Label for the "81" text
     private let membersLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.69, green: 0.69, blue: 0.792, alpha: 1)
-        label.font = UIFont(name: "SFProDisplay-Regular", size: 20)
+        label.font = UIFont.systemFont(ofSize: 12)
         return label
     }()
     
     // Small text below the title
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.italicSystemFont(ofSize: 14)
+        label.font = UIFont.italicSystemFont(ofSize: 8)
         label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         label.numberOfLines = 0
         return label
     }()
     
-    // Join button
-    // Join button
     private let joinButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 1.0, alpha: 1.0) // #7A7AFF
+        button.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 1.0, alpha: 1.0)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 7)
         button.layer.cornerRadius = 5
         return button
     }()
@@ -101,8 +98,6 @@ class CommunityComponent: UIView {
     
     private func setupUI() {
         backgroundColor = .white
-        
-        // Add subviews with space in between
         addSubview(imageView)
         addSubview(titleLabel)
         addSubview(controlADHDLabel)
@@ -117,8 +112,8 @@ class CommunityComponent: UIView {
             imageView.topAnchor.constraint(equalTo: topAnchor),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 190),
-            imageView.widthAnchor.constraint(equalToConstant: 120)
+            imageView.heightAnchor.constraint(equalToConstant: 70),
+            imageView.widthAnchor.constraint(equalToConstant: 60)
         ])
         
         // Set constraints for title label
@@ -127,7 +122,7 @@ class CommunityComponent: UIView {
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            titleLabel.heightAnchor.constraint(equalToConstant: 30)
+            titleLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
         
         // Set constraints for control ADHD label
@@ -141,9 +136,9 @@ class CommunityComponent: UIView {
         personIconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             personIconImageView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-            personIconImageView.trailingAnchor.constraint(equalTo: membersLabel.leadingAnchor, constant: -8),
-            personIconImageView.widthAnchor.constraint(equalToConstant: 40),
-            personIconImageView.heightAnchor.constraint(equalToConstant: 40)
+            personIconImageView.trailingAnchor.constraint(equalTo: membersLabel.leadingAnchor, constant: 0),
+            personIconImageView.widthAnchor.constraint(equalToConstant: 20),
+            personIconImageView.heightAnchor.constraint(equalToConstant: 20)
         ])
         
         // Set constraints for members label
@@ -156,16 +151,16 @@ class CommunityComponent: UIView {
         // Set constraints for join button
         joinButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            joinButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            joinButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 0),
             joinButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            joinButton.widthAnchor.constraint(equalToConstant: 100),
-            joinButton.heightAnchor.constraint(equalToConstant: 50)
+            joinButton.widthAnchor.constraint(equalToConstant: 40),
+            joinButton.heightAnchor.constraint(equalToConstant: 20)
         ])
         
         // Set constraints for description label
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 0),
             descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             descriptionLabel.trailingAnchor.constraint(equalTo: joinButton.leadingAnchor, constant: 0),
             descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -8)
