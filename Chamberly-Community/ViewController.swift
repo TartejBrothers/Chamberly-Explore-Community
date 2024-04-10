@@ -16,8 +16,6 @@ class ViewController: UIViewController, UISearchBarDelegate {
     var communityStackView2: UIStackView?
     
     var selectedTabIndex = 0
-    
-    // Add a reference to the scroll view
     var scrollView: UIScrollView!
 
     override func viewDidLoad() {
@@ -35,7 +33,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 170),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 220),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
@@ -181,7 +179,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         NSLayoutConstraint.activate([
             headerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -120),
             headerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            headerStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20)
+            headerStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0)
         ])
     }
 
@@ -214,10 +212,11 @@ class ViewController: UIViewController, UISearchBarDelegate {
         NSLayoutConstraint.activate([
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 80),
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60),
             searchBar.heightAnchor.constraint(equalToConstant: 36)
         ])
     }
+
 
     func setupTabs(in view: UIView) {
         let segmentedControl = UISegmentedControl(items: ["All", "My Community", "Explore More"])
@@ -238,7 +237,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         NSLayoutConstraint.activate([
             segmentedControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             segmentedControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            segmentedControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
+            segmentedControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
             segmentedControl.heightAnchor.constraint(equalToConstant: 32)
         ])
     }
