@@ -57,7 +57,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
 
         // Set content size of scroll view
         let contentWidth = UIScreen.main.bounds.width
-        let contentHeight: CGFloat = 1200
+        let contentHeight: CGFloat = 1150
         contentView.widthAnchor.constraint(equalToConstant: contentWidth).isActive = true
         contentView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
         showContent(for: selectedTabIndex)
@@ -65,19 +65,19 @@ class ViewController: UIViewController, UISearchBarDelegate {
 
     func setupTrending(in view: UIView) -> UIStackView {
         trendingSubheading = subHeading(with: "Trending", topAnchorConstant: 70, in: view)
-        return setupCommunityComponents(topAnchorConstant: 50, subHeadingLabel: trendingSubheading!, in: view)
+        return setupCommunityComponents(topAnchorConstant: 50, subHeadingLabel: trendingSubheading!, joinNow: true, in: view)
     }
 
     func setupRecommendations(in view: UIView) -> UIStackView {
         recommendationsSubheading = subHeading(with: "Recommendations", topAnchorConstant: 270, in: view)
-        return setupCommunityComponents(topAnchorConstant: 250, subHeadingLabel: recommendationsSubheading!, in: view)
+        return setupCommunityComponents(topAnchorConstant: 250, subHeadingLabel: recommendationsSubheading!, joinNow: true, in: view)
     }
     
     func setupMyCommunity(in view: UIView) -> UIStackView {
         myCommunitySubheading = subHeading(with: "My Community", topAnchorConstant: 470, in: view)
         
-        communityStackView1 = setupCommunityComponents(topAnchorConstant: 450, subHeadingLabel: myCommunitySubheading!, in: view)
-        communityStackView2 = setupCommunityComponents(topAnchorConstant: 610, subHeadingLabel: myCommunitySubheading!, in: view)
+        communityStackView1 = setupCommunityComponents(topAnchorConstant: 450, subHeadingLabel: myCommunitySubheading!, joinNow: false, in: view)
+        communityStackView2 = setupCommunityComponents(topAnchorConstant: 610, subHeadingLabel: myCommunitySubheading!, joinNow: false, in: view)
         
         return communityStackView1!
     }
@@ -85,14 +85,14 @@ class ViewController: UIViewController, UISearchBarDelegate {
 
     func setupExplore(in view: UIView) -> UIStackView {
         exploreSubheading = subHeading(with: "Explore More", topAnchorConstant: 830, in: view)
-        communityStackView1 = setupCommunityComponents(topAnchorConstant: 810, subHeadingLabel: myCommunitySubheading!, in: view)
-        communityStackView2 = setupCommunityComponents(topAnchorConstant: 970, subHeadingLabel: myCommunitySubheading!, in: view)
+        communityStackView1 = setupCommunityComponents(topAnchorConstant: 810, subHeadingLabel: myCommunitySubheading!, joinNow: true, in: view)
+        communityStackView2 = setupCommunityComponents(topAnchorConstant: 970, subHeadingLabel: myCommunitySubheading!, joinNow: true, in: view)
         
         return communityStackView1!
 
     }
     
-    func setupCommunityComponents(topAnchorConstant: CGFloat, subHeadingLabel: UILabel, in view: UIView) -> UIStackView {
+    func setupCommunityComponents(topAnchorConstant: CGFloat, subHeadingLabel: UILabel, joinNow: Bool, in view: UIView) -> UIStackView {
         let componentWidth = UIScreen.main.bounds.width * 0.4
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -104,46 +104,46 @@ class ViewController: UIViewController, UISearchBarDelegate {
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-       
+        
         let communityStackView = UIStackView()
         communityStackView.axis = .horizontal
         communityStackView.spacing = 8
         communityStackView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(communityStackView)
         
-        let communityComponent = CommunityComponent()
-        communityComponent.headingLabelText = "Loyalty Doubts"
-        communityComponent.personIconImage = UIImage(named: "person2")
-        communityComponent.membersLabelText = "81"
-        communityComponent.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-        communityComponent.isJoined = false
+        let communityComponent1 = CommunityComponent()
+        communityComponent1.headingLabelText = "Loyalty Doubts"
+        communityComponent1.personIconImage = UIImage(named: "person2")
+        communityComponent1.membersLabelText = "81"
+        communityComponent1.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        communityComponent1.isJoined = !joinNow
 
-        communityComponent.translatesAutoresizingMaskIntoConstraints = false
-        communityComponent.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
-        communityStackView.addArrangedSubview(communityComponent)
+        communityComponent1.translatesAutoresizingMaskIntoConstraints = false
+        communityComponent1.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
+        communityStackView.addArrangedSubview(communityComponent1)
         for _ in 1...3 {
-            let communityComponent = CommunityComponent()
-            communityComponent.headingLabelText = "Control ADHD"
-            communityComponent.personIconImage = UIImage(named: "person2")
-            communityComponent.membersLabelText = "81"
-            communityComponent.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            communityComponent.isJoined = false
-
-            communityComponent.translatesAutoresizingMaskIntoConstraints = false
-            communityComponent.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
-            communityStackView.addArrangedSubview(communityComponent)
+            let communityComponent2 = CommunityComponent()
+            communityComponent2.headingLabelText = "Control ADHD"
+            communityComponent2.personIconImage = UIImage(named: "person2")
+            communityComponent2.membersLabelText = "81"
+            communityComponent2.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            communityComponent2.isJoined = !joinNow
+            
+            communityComponent2.translatesAutoresizingMaskIntoConstraints = false
+            communityComponent2.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
+            communityStackView.addArrangedSubview(communityComponent2)
         }
-        
-        let communityComponent2 = CommunityComponent()
-        communityComponent2.headingLabelText = "Exam Relief"
-        communityComponent2.personIconImage = UIImage(named: "person2")
-        communityComponent2.membersLabelText = "81"
-        communityComponent2.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-        communityComponent2.isJoined = false
+        let communityComponent3 = CommunityComponent()
+        communityComponent3.headingLabelText = "Exam Relief"
+        communityComponent3.personIconImage = UIImage(named: "person2")
+        communityComponent3.membersLabelText = "81"
+        communityComponent3.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        communityComponent3.isJoined = !joinNow
 
-        communityComponent2.translatesAutoresizingMaskIntoConstraints = false
-        communityComponent2.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
-        communityStackView.addArrangedSubview(communityComponent2)
+        communityComponent3.translatesAutoresizingMaskIntoConstraints = false
+        communityComponent3.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
+        communityStackView.addArrangedSubview(communityComponent3)
+        
         let totalWidth = CGFloat(5) * (componentWidth + 8)
         scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
         scrollView.showsHorizontalScrollIndicator = false
