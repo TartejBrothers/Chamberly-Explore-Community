@@ -236,6 +236,20 @@ class ViewController: UIViewController, UISearchBarDelegate {
         segmentedControl.tintColor = UIColor(red: 0.18, green: 0.18, blue: 0.357, alpha: 1)
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
 
+        // Customize font attributes for normal state
+        let normalAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 14, weight: .regular),
+            .foregroundColor: UIColor.black
+        ]
+        segmentedControl.setTitleTextAttributes(normalAttributes, for: .normal)
+
+        // Customize font attributes for selected state
+        let selectedAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.boldSystemFont(ofSize: 14), 
+            .foregroundColor: UIColor.black
+        ]
+        segmentedControl.setTitleTextAttributes(selectedAttributes, for: .selected)
+
         // Remove custom labels to avoid overlap
         for i in 0..<segmentedControl.numberOfSegments {
             let segmentView = segmentedControl.subviews[i]
@@ -252,6 +266,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
             segmentedControl.heightAnchor.constraint(equalToConstant: 32)
         ])
     }
+
 
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         selectedTabIndex = sender.selectedSegmentIndex
@@ -371,7 +386,6 @@ struct ViewControllerPreview: UIViewControllerRepresentable {
     }
 }
 
-// Provide a preview for ViewController
 @available(iOS 13.0, *)
 struct ViewController_Preview: PreviewProvider {
     static var previews: some View {
