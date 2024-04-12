@@ -1,6 +1,6 @@
 import UIKit
 
-class ViewController: UIViewController, UISearchBarDelegate {
+class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegate {
 
     var trendingStackView: UIStackView?
     var recommendationsStackView: UIStackView?
@@ -57,10 +57,13 @@ class ViewController: UIViewController, UISearchBarDelegate {
 
         // Set content size of scroll view
         let contentWidth = UIScreen.main.bounds.width
-        let contentHeight: CGFloat = 1150
+        let contentHeight: CGFloat = 1450
         contentView.widthAnchor.constraint(equalToConstant: contentWidth).isActive = true
         contentView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
         showContent(for: selectedTabIndex)
+        
+        // Set the scroll view's delegate
+        scrollView.delegate = self
     }
 
     func setupTrending(in view: UIView) -> UIStackView {
@@ -161,7 +164,6 @@ class ViewController: UIViewController, UISearchBarDelegate {
         case 0:
             // Scroll to the top
             scrollView.setContentOffset(CGPoint.zero, animated: true)
-            // Show all content
             for case let communityComponent as CommunityComponent in contentView.subviews {
                 communityComponent.isHidden = false
             }
@@ -172,16 +174,22 @@ class ViewController: UIViewController, UISearchBarDelegate {
                 let yOffset = myCommunitySubheading.frame.origin.y
                 scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
             }
-            
+            selectedTabIndex = 1
+
         case 2:
             // Scroll to exploreStackView
             if let exploreSubheading = exploreSubheading {
                 let yOffset = exploreSubheading.frame.origin.y
-                scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
+                scrollView.setContentOffset(CGPoint(x: 0, y: yOffset - 10), animated: true)
             }
-            
+            selectedTabIndex = 2
+
         default:
             break
+        }
+
+        if let segmentedControl = view.subviews.compactMap({ $0 as? UISegmentedControl }).first {
+            segmentedControl.selectedSegmentIndex = selectedTabIndex
         }
     }
 
@@ -293,6 +301,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
 
         return headerLabel
     }
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchText = searchBar.text?.lowercased() else { return }
         
@@ -357,8 +366,25 @@ class ViewController: UIViewController, UISearchBarDelegate {
         resetVisibility(in: contentView)
     }
 
-
-
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let yOffset = scrollView.contentOffset.y
+        
+        if yOffset >= myCommunitySubheading?.frame.origin.y ?? 0 && yOffset < exploreSubheading?.frame.origin.y ?? 0 {
+            // Scrolled to My Community section
+            selectedTabIndex = 1
+        } else if yOffset >= exploreSubheading?.frame.origin.y ?? 0 {
+            // Scrolled to Explore More section
+            selectedTabIndex = 2
+        } else {
+            // Scrolled to the top or other sections
+            selectedTabIndex = 0
+        }
+        
+        // Update the segmented control to reflect the change in selected tab
+        if let segmentedControl = view.subviews.compactMap({ $0 as? UISegmentedControl }).first {
+            segmentedControl.selectedSegmentIndex = selectedTabIndex
+        }
+    }
 
 }
 
