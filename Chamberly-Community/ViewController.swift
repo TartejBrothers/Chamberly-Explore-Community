@@ -57,7 +57,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
 
         // Set content size of scroll view
         let contentWidth = UIScreen.main.bounds.width
-        let contentHeight: CGFloat = 1000
+        let contentHeight: CGFloat = 1200
         contentView.widthAnchor.constraint(equalToConstant: contentWidth).isActive = true
         contentView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
         showContent(for: selectedTabIndex)
@@ -85,7 +85,11 @@ class ViewController: UIViewController, UISearchBarDelegate {
 
     func setupExplore(in view: UIView) -> UIStackView {
         exploreSubheading = subHeading(with: "Explore More", topAnchorConstant: 830, in: view)
-        return setupCommunityComponents(topAnchorConstant: 810, subHeadingLabel: exploreSubheading!, in: view)
+        communityStackView1 = setupCommunityComponents(topAnchorConstant: 810, subHeadingLabel: myCommunitySubheading!, in: view)
+        communityStackView2 = setupCommunityComponents(topAnchorConstant: 970, subHeadingLabel: myCommunitySubheading!, in: view)
+        
+        return communityStackView1!
+
     }
     
     func setupCommunityComponents(topAnchorConstant: CGFloat, subHeadingLabel: UILabel, in view: UIView) -> UIStackView {
@@ -93,8 +97,6 @@ class ViewController: UIViewController, UISearchBarDelegate {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
-        
-        // Add constraints for the scroll view
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -119,7 +121,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         communityComponent.translatesAutoresizingMaskIntoConstraints = false
         communityComponent.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
         communityStackView.addArrangedSubview(communityComponent)
-        for _ in 1...5 {
+        for _ in 1...3 {
             let communityComponent = CommunityComponent()
             communityComponent.headingLabelText = "Control ADHD"
             communityComponent.personIconImage = UIImage(named: "person2")
@@ -142,7 +144,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
         communityComponent2.translatesAutoresizingMaskIntoConstraints = false
         communityComponent2.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
         communityStackView.addArrangedSubview(communityComponent2)
-        let totalWidth = CGFloat(7) * (componentWidth + 8)
+        let totalWidth = CGFloat(5) * (componentWidth + 8)
         scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
         scrollView.showsHorizontalScrollIndicator = false
         NSLayoutConstraint.activate([
@@ -231,21 +233,18 @@ class ViewController: UIViewController, UISearchBarDelegate {
 
     func setupTabs(in view: UIView) {
         let segmentedControl = UISegmentedControl(items: ["All", "My Community", "Explore More"])
-        segmentedControl.selectedSegmentIndex = 0 // Set default selection
+        segmentedControl.selectedSegmentIndex = 0
         segmentedControl.backgroundColor = .white
         segmentedControl.tintColor = UIColor(red: 0.18, green: 0.18, blue: 0.357, alpha: 1)
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
-
-        // Customize font attributes for normal state
         let normalAttributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 14, weight: .regular),
             .foregroundColor: UIColor.black
         ]
         segmentedControl.setTitleTextAttributes(normalAttributes, for: .normal)
 
-        // Customize font attributes for selected state
         let selectedAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.boldSystemFont(ofSize: 14), 
+            .font: UIFont.boldSystemFont(ofSize: 14),
             .foregroundColor: UIColor.black
         ]
         segmentedControl.setTitleTextAttributes(selectedAttributes, for: .selected)
@@ -298,8 +297,6 @@ class ViewController: UIViewController, UISearchBarDelegate {
         guard let searchText = searchBar.text?.lowercased() else { return }
         
         var foundMatchingComponent = false
-        
-        // Recursive function to search for CommunityComponent within subviews
         func findCommunityComponent(in view: UIView) {
             for subview in view.subviews {
                 if let stackView = subview as? UIStackView {
@@ -314,7 +311,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
                                 foundMatchingComponent = true
                             }
                         } else {
-                            // Recursively search for CommunityComponent within the arranged subview
+    
                             findCommunityComponent(in: arrangedSubview)
                         }
                     }
@@ -324,15 +321,9 @@ class ViewController: UIViewController, UISearchBarDelegate {
                 }
             }
         }
-        
-        // Call the recursive function to search for CommunityComponent within contentView
         findCommunityComponent(in: contentView)
         
-        // If no matching component is found, you might want to display a message or handle it accordingly
-        if !foundMatchingComponent {
-            print("No matching component found.")
-            // You can add additional UI updates or actions here
-        }
+        
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
