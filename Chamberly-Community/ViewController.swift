@@ -150,11 +150,20 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         let totalWidth = CGFloat(5) * (componentWidth + 8)
         scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
         scrollView.showsHorizontalScrollIndicator = false
+        
+        // Adjust content offset to leftmost part
+        scrollView.setContentOffset(CGPoint.zero, animated: false)
+        
         NSLayoutConstraint.activate([
             subHeadingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             subHeadingLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant - 30), // Adjust this constant based on your layout
             subHeadingLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
+        
+        // Adjust content offset to leftmost part after a short delay to ensure the layout is fully updated
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            scrollView.setContentOffset(CGPoint.zero, animated: false)
+        }
         
         return communityStackView
     }
@@ -295,7 +304,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
 
         NSLayoutConstraint.activate([
             headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            headerLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant - 50), // Adjust this constant based on your layout
+            headerLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant - 50),
             headerLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
 
@@ -320,20 +329,29 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
                                 foundMatchingComponent = true
                             }
                         } else {
-    
+
                             findCommunityComponent(in: arrangedSubview)
                         }
                     }
                 } else {
                     // Recursively search for CommunityComponent within the subview
                     findCommunityComponent(in: subview)
-                }
+            }
             }
         }
         findCommunityComponent(in: contentView)
-        
-        
+
+        // Scroll the horizontal scroll view to the leftmost position
+            var superview: UIView? = contentView
+            while superview != nil {
+                if let scrollView = superview as? UIScrollView {
+                    scrollView.setContentOffset(CGPoint.zero, animated: true)
+                    break
+                }
+                superview = superview?.superview
+            }
     }
+
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         // If the search text is empty, reset the visibility of all CommunityComponent instances
