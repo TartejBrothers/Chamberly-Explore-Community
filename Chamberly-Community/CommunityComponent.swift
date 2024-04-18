@@ -1,5 +1,7 @@
 import UIKit
-
+protocol CommunityComponentDelegate: AnyObject {
+    func joinButtonTapped(in component: CommunityComponent)
+}
 class CommunityComponent: UIView {
     // Properties for dynamic content
     var headingLabelText: String = "" {
@@ -76,15 +78,18 @@ class CommunityComponent: UIView {
         return label
     }()
     
-    private let joinButton: UIButton = {
+    
+    fileprivate let joinButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 1.0, alpha: 1.0)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 7)
-        button.layer.cornerRadius = 5
-        button.addTarget(self, action: #selector(joinButtonTapped(_:)), for: .touchUpInside)
-        return button
+               button.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 1.0, alpha: 1.0)
+               button.setTitleColor(.white, for: .normal)
+               button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 7)
+               button.layer.cornerRadius = 5
+               button.addTarget(self, action: #selector(joinButtonTapped(_:)), for: .touchUpInside)
+               return button
     }()
+
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -177,9 +182,13 @@ class CommunityComponent: UIView {
             descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         }
     
+    weak var delegate: CommunityComponentDelegate?
+
     @objc private func joinButtonTapped(_ sender: UIButton) {
+        delegate?.joinButtonTapped(in: self)
         isJoined = !isJoined
     }
+
 }
 
 import SwiftUI

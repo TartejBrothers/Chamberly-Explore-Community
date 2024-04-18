@@ -1,6 +1,8 @@
 import UIKit
 
-class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegate {
+class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegate, CommunityComponentDelegate {
+
+    
     
     var trendingStackView: UIStackView?
     var recommendationsStackView: UIStackView?
@@ -14,7 +16,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
     
     var communityStackView1: UIStackView?
     var communityStackView2: UIStackView?
-
+    
     var selectedTabIndex = 0
     var scrollView: UIScrollView!
     var contentView: UIView!
@@ -63,7 +65,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         contentView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
         showContent(for: selectedTabIndex)
         
-        // Set the scroll view's delegate
         scrollView.delegate = self
     }
     
@@ -107,9 +108,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
-        
-
         
         let communityStackView = UIStackView()
         communityStackView.axis = .horizontal
@@ -163,13 +161,19 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             subHeadingLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
         
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             scrollView.setContentOffset(CGPoint.zero, animated: false)
         }
         
+        // Assign delegate to community components
+        for case let communityComponent as CommunityComponent in communityStackView.arrangedSubviews {
+            communityComponent.delegate = self
+        }
+        
+        // Return community stack view
         return communityStackView
     }
+
     func showContent(for index: Int) {
         switch index {
         case 0:
@@ -313,6 +317,17 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         return headerLabel
     }
     
+    func joinButtonTapped(in component: CommunityComponent) {
+        myCommunityStackView?.addArrangedSubview(component)
+        
+        // Adjust the width of communityStack1
+        let componentWidth = UIScreen.main.bounds.width * 0.4
+        let totalWidth = CGFloat(numberOfComponents + 1) * (componentWidth + 8)
+        let scrollView = myCommunityStackView?.superview as? UIScrollView
+        scrollView?.contentSize = CGSize(width: totalWidth, height: scrollView?.frame.height ?? 0)
+    }
+
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchText = searchBar.text?.lowercased() else { return }
         
@@ -408,6 +423,9 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             segmentedControl.selectedSegmentIndex = selectedTabIndex
         }
     }
+    
+    
+
 
 }
 
