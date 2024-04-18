@@ -186,7 +186,6 @@ class CommunityComponent: UIView {
 
     @objc private func joinButtonTapped(_ sender: UIButton) {
         delegate?.joinButtonTapped(in: self)
-        print("Join Button tapped")
         isJoined = !isJoined
     }
 
