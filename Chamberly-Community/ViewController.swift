@@ -1,6 +1,11 @@
 import UIKit
 
-class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegate {
+class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegate, CommunityComponentDelegate {
+    func joinButtonTapped(in component: CommunityComponent) {
+            print("Join button tapped in component: \(component)")
+            myCommunityStackView?.addArrangedSubview(component)
+        }
+    
     
     var trendingStackView: UIStackView?
     var recommendationsStackView: UIStackView?
@@ -14,7 +19,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
     
     var communityStackView1: UIStackView?
     var communityStackView2: UIStackView?
-
+    
     var selectedTabIndex = 0
     var scrollView: UIScrollView!
     var contentView: UIView!
@@ -109,7 +114,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         ])
         
         
-
         
         let communityStackView = UIStackView()
         communityStackView.axis = .horizontal
@@ -168,7 +172,11 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             scrollView.setContentOffset(CGPoint.zero, animated: false)
         }
         
-        return communityStackView
+        for case let communityComponent as CommunityComponent in communityStackView.arrangedSubviews {
+                    communityComponent.delegate = self
+                }
+
+                return communityStackView
     }
     func showContent(for index: Int) {
         switch index {
@@ -408,6 +416,35 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             segmentedControl.selectedSegmentIndex = selectedTabIndex
         }
     }
+    
+    @objc private func joinButtonTapped(_ sender: UIButton) {
+        print("Join button tapped")
+        
+        // Find the correct community stack view for "My Community"
+//        guard let myCommunityStackView = myCommunityStackView else {
+//            print("My Community stack view is not set.")
+//            return
+//        }
+//        
+//        // Ensure there is at least one arranged subview in the stack view
+//        guard let lastCommunityComponent = myCommunityStackView.arrangedSubviews.last as? CommunityComponent else {
+//            print("No existing community components in My Community stack view.")
+//            return
+//        }
+//        
+// 
+//        let newCommunityComponent = CommunityComponent()
+//        newCommunityComponent.headingLabelText = lastCommunityComponent.headingLabelText
+//        newCommunityComponent.personIconImage = lastCommunityComponent.personIconImage
+//        newCommunityComponent.membersLabelText = lastCommunityComponent.membersLabelText
+//        newCommunityComponent.descriptionLabelText = lastCommunityComponent.descriptionLabelText
+//        newCommunityComponent.isJoined = lastCommunityComponent.isJoined
+//        
+//        // Add the new component to the community stack view for "My Community"
+//        myCommunityStackView.addArrangedSubview(newCommunityComponent)
+    }
+
+
 
 }
 
