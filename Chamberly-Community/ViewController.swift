@@ -21,7 +21,9 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
     var scrollView: UIScrollView!
     var contentView: UIView!
     var numberOfComponents = 5
-    var originalComponents: [UIView] = []
+    var originalComponents: [CommunityComponent] = []
+    
+//    var searchBar: UISearchBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,8 +67,9 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         contentView.widthAnchor.constraint(equalToConstant: contentWidth).isActive = true
         contentView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
         showContent(for: selectedTabIndex)
-        
+//        searchBar.delegate = self
         scrollView.delegate = self
+        
     }
     
     func setupTrending(in view: UIView, numberOfComponents: Int) -> UIStackView {
@@ -116,43 +119,32 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         communityStackView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(communityStackView)
         
-        let communityComponent1 = CommunityComponent()
-        communityComponent1.headingLabelText = "Loyalty Doubts"
-        communityComponent1.personIconImage = UIImage(named: "person2")
-        communityComponent1.membersLabelText = "81"
-        communityComponent1.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-        communityComponent1.isJoined = !joinNow
-        
-        communityComponent1.translatesAutoresizingMaskIntoConstraints = false
-        communityComponent1.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
-        communityStackView.addArrangedSubview(communityComponent1)
-        originalComponents.append(communityComponent1) // Add to original components
-        
-        for _ in 1...3 {
-            let communityComponent2 = CommunityComponent()
-            communityComponent2.headingLabelText = "Control ADHD"
-            communityComponent2.personIconImage = UIImage(named: "person2")
-            communityComponent2.membersLabelText = "81"
-            communityComponent2.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            communityComponent2.isJoined = !joinNow
-            
-            communityComponent2.translatesAutoresizingMaskIntoConstraints = false
-            communityComponent2.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
-            communityStackView.addArrangedSubview(communityComponent2)
-            originalComponents.append(communityComponent2) // Add to original components
+        func createCommunityComponent(headingText: String) -> CommunityComponent {
+            let communityComponent = CommunityComponent()
+            communityComponent.headingLabelText = headingText
+            communityComponent.personIconImage = UIImage(named: "person2")
+            communityComponent.membersLabelText = "81"
+            communityComponent.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            communityComponent.isJoined = !joinNow
+            communityComponent.translatesAutoresizingMaskIntoConstraints = false
+            communityComponent.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
+            communityComponent.delegate = self
+            return communityComponent
         }
         
-        let communityComponent3 = CommunityComponent()
-        communityComponent3.headingLabelText = "Exam Relief"
-        communityComponent3.personIconImage = UIImage(named: "person2")
-        communityComponent3.membersLabelText = "81"
-        communityComponent3.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-        communityComponent3.isJoined = !joinNow
+        let communityComponent1 = createCommunityComponent(headingText: "Loyalty Doubts")
+        communityStackView.addArrangedSubview(communityComponent1)
+        originalComponents.append(communityComponent1)
         
-        communityComponent3.translatesAutoresizingMaskIntoConstraints = false
-        communityComponent3.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
+        for _ in 1...3 {
+            let communityComponent2 = createCommunityComponent(headingText: "Control ADHD")
+            communityStackView.addArrangedSubview(communityComponent2)
+            originalComponents.append(communityComponent2)
+        }
+        
+        let communityComponent3 = createCommunityComponent(headingText: "Exam Relief")
         communityStackView.addArrangedSubview(communityComponent3)
-        originalComponents.append(communityComponent3) // Add to original components
+        originalComponents.append(communityComponent3)
         
         let totalWidth = CGFloat(numberOfComponents) * (componentWidth + 8)
         scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
@@ -166,10 +158,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             scrollView.setContentOffset(CGPoint.zero, animated: false)
-        }
-        
-        for case let communityComponent as CommunityComponent in communityStackView.arrangedSubviews {
-            communityComponent.delegate = self
         }
         
         return communityStackView
@@ -331,33 +319,20 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
 
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let searchText = searchBar.text?.lowercased(), !searchText.isEmpty else { return }
+        guard let searchText = searchBar.text?.lowercased(), !searchText.isEmpty else {
+            resetComponentVisibility(in: contentView)
+            return
+        }
 
         // Temporary array to hold matching components
         var matchingComponents: [CommunityComponent] = []
 
-        func findCommunityComponent(in view: UIView) {
-            for subview in view.subviews {
-                if let stackView = subview as? UIStackView {
-                    for arrangedSubview in stackView.arrangedSubviews {
-                        if let communityComponent = arrangedSubview as? CommunityComponent {
-                            let headingText = communityComponent.headingLabelText.lowercased()
-                            let isMatching = headingText.contains(searchText)
-                            
-                            if isMatching {
-                                matchingComponents.append(communityComponent)
-                            }
-                        } else {
-                            findCommunityComponent(in: arrangedSubview)
-                        }
-                    }
-                } else {
-                    findCommunityComponent(in: subview)
-                }
+        // Find matching components
+        for component in originalComponents {
+            if component.headingLabelText.lowercased().contains(searchText) {
+                matchingComponents.append(component)
             }
         }
-
-        findCommunityComponent(in: contentView)
 
         // Remove all components from contentView
         contentView.subviews.forEach { $0.removeFromSuperview() }
@@ -386,53 +361,46 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         scrollView.setContentOffset(CGPoint.zero, animated: true)
     }
 
-
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // If the search text is empty, reset the visibility of all CommunityComponent instances
         if searchText.isEmpty {
             resetComponentVisibility(in: contentView)
         }
     }
 
+
+
     func resetComponentVisibility(in view: UIView) {
-        // Recursive function to re-add all CommunityComponent instances
-        func resetVisibility(in view: UIView) {
-            for subview in view.subviews {
-                if let stackView = subview as? UIStackView {
-                    for arrangedSubview in stackView.arrangedSubviews {
-                        if let communityComponent = arrangedSubview as? CommunityComponent {
-                            communityComponent.isHidden = false
-                        } else {
-                            resetVisibility(in: arrangedSubview)
-                        }
-                    }
-                    // Reset axis and spacing for the stack view
-                    stackView.axis = .horizontal
-                    stackView.spacing = 8
-                } else {
-                    resetVisibility(in: subview)
-                }
-            }
+        // Remove all subviews from the content view
+        contentView.subviews.forEach { $0.removeFromSuperview() }
+
+        // Create a new vertical stack view for the original components
+        let restoredStackView = UIStackView()
+        restoredStackView.axis = .vertical
+        restoredStackView.spacing = 0
+        restoredStackView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(restoredStackView)
+
+        // Add the original components back to the restored stack view
+        for component in originalComponents {
+            restoredStackView.addArrangedSubview(component)
         }
 
-        // Remove the search results stack view if it exists
-        contentView.subviews.filter { $0 is UIStackView }.forEach { $0.removeFromSuperview() }
-
-        // Re-add all original components
-        for originalComponent in originalComponents {
-            contentView.addSubview(originalComponent)
-        }
-
-        // Call the recursive function to reset visibility within contentView
-        resetVisibility(in: contentView)
+        // Add constraints for the restored stack view
+        NSLayoutConstraint.activate([
+            restoredStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            restoredStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            restoredStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50),
+            restoredStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
 
         // Show subheadings
         trendingSubheading?.isHidden = false
         recommendationsSubheading?.isHidden = false
         myCommunitySubheading?.isHidden = false
         exploreSubheading?.isHidden = false
-    }
 
+        scrollView.setContentOffset(CGPoint.zero, animated: true)
+    }
 
     
 
