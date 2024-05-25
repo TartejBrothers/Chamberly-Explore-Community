@@ -434,25 +434,57 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         // Remove all subviews from the content view
         contentView.subviews.forEach { $0.removeFromSuperview() }
 
-        // Create a new vertical stack view for search results
-        let searchResultsStackView = UIStackView()
-        searchResultsStackView.axis = .vertical
-        searchResultsStackView.spacing = 0
-        searchResultsStackView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(searchResultsStackView)
+        if matchingComponents.isEmpty {
+            // Show "No community found" message
+            let noResultsLabel = UILabel()
+            noResultsLabel.text = "No community found"
+            noResultsLabel.textAlignment = .center
+            noResultsLabel.textColor = .gray
+            noResultsLabel.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(noResultsLabel)
 
-        // Add matching components to the search results stack view
-        for component in matchingComponents {
-            searchResultsStackView.addArrangedSubview(component)
+            NSLayoutConstraint.activate([
+                noResultsLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+                noResultsLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50)
+            ])
+        } else {
+            // Create a new vertical stack view for search results
+            let searchResultsStackView = UIStackView()
+            searchResultsStackView.axis = .vertical
+            searchResultsStackView.spacing = 0
+            searchResultsStackView.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(searchResultsStackView)
+
+            // Add matching components to the search results stack view
+            for component in matchingComponents {
+                let wrapperView = UIView()
+                wrapperView.addSubview(component)
+                component.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    component.leadingAnchor.constraint(equalTo: wrapperView.leadingAnchor),
+                    component.trailingAnchor.constraint(equalTo: wrapperView.trailingAnchor),
+                    component.topAnchor.constraint(equalTo: wrapperView.topAnchor),
+                    component.bottomAnchor.constraint(equalTo: wrapperView.bottomAnchor),
+                    component.widthAnchor.constraint(equalToConstant: 200), // Set component width
+                    component.heightAnchor.constraint(equalToConstant: 150) // Set component height
+                ])
+                searchResultsStackView.addArrangedSubview(wrapperView)
+            }
+
+            // Add constraints for the search results stack view
+            NSLayoutConstraint.activate([
+                searchResultsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+                searchResultsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+                searchResultsStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50),
+            ])
+            
+            // Calculate the total height of the search results
+            let totalResultsHeight = CGFloat(matchingComponents.count) * 150 // Assuming each component has a fixed height of 150
+            contentView.heightAnchor.constraint(equalToConstant: totalResultsHeight + 100).isActive = true // Adding 100 for padding
+            
+            // Adjust content size of scroll view
+            scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: totalResultsHeight + 100)
         }
-
-        // Add constraints for the search results stack view
-        NSLayoutConstraint.activate([
-            searchResultsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            searchResultsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            searchResultsStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50),
-            searchResultsStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
 
         // Scroll the content view to the top
         scrollView.setContentOffset(CGPoint.zero, animated: true)
