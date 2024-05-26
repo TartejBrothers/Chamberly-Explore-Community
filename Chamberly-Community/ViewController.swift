@@ -87,11 +87,28 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
                 searchResultsView!.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ])
         }
+    func showSearchResults() {
+        guard let searchResultsView = searchResultsView else { return }
+        searchResultsView.removeFromSuperview()
+        self.searchResultsView = SearchResultsView(frame: .zero)
+
+        guard let searchResultsView = self.searchResultsView else { return }
+        searchResultsView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchResultsView)
         
-        
+        NSLayoutConstraint.activate([
+            searchResultsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchResultsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            searchResultsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchResultsView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+
+
     internal func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
             guard let searchText = searchBar.text?.lowercased(), !searchText.isEmpty else {
-                resetComponentVisibility(in: contentView)
+                
                 searchResultsView?.clearResults()
                 searchResultsView?.isHidden = true
                 return
@@ -118,7 +135,9 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         }
 
     class SearchResultsView: UIView {
+        var backButton: UIButton!
         var stackView: UIStackView!
+        
 
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -129,7 +148,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             super.init(coder: aDecoder)
             setupUI()
         }
-
         private func setupUI() {
             backgroundColor = .white
 
@@ -143,7 +161,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             // Add header community image
             let communityImage = UIImageView(image: UIImage(named: "Header"))
             communityImage.contentMode = .scaleAspectFit
-            
             communityImage.translatesAutoresizingMaskIntoConstraints = false
             headerProfileStackView.addArrangedSubview(communityImage)
 
@@ -170,12 +187,23 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             stackView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(stackView)
 
+            // Add back button with system icon
+            let backButton = UIButton(type: .system)
+            backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal) // Using system back icon
+            backButton.tintColor = UIColor(red: 0.478, green: 0.478, blue: 1.0, alpha: 1.0) // Adjusted color
+            backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+            backButton.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(backButton)
+
             // Adjust constraints for all elements
             NSLayoutConstraint.activate([
                 headerProfileStackView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-                headerProfileStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -10),
+                headerProfileStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -40), // Adjusted leading anchor
                 headerProfileStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
                 headerProfileStackView.heightAnchor.constraint(equalToConstant: 40),
+
+                backButton.centerYAnchor.constraint(equalTo: headerProfileStackView.centerYAnchor),
+                backButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20), // Adjusted leading anchor
 
                 searchBar.topAnchor.constraint(equalTo: headerProfileStackView.bottomAnchor, constant: 20),
                 searchBar.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
@@ -187,17 +215,30 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
                 stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
                 stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20)
             ])
+
+        }
+
+
+        @objc private func backButtonTapped() {
+            if let parentVC = superview?.next as? ViewController {
+                parentVC.hideSearchResults()
+            }
         }
 
 
         func addCommunityComponent(_ component: CommunityComponent) {
             stackView.addArrangedSubview(component)
         }
+        
 
         func clearResults() {
             stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         }
     }
+    func hideSearchResults() {
+            searchResultsView?.removeFromSuperview()
+            searchResultsView = nil
+        }
 
     func setupTrending(in view: UIView, numberOfComponents: Int) -> UIStackView {
         trendingSubheading = subHeading(with: "Trending", topAnchorConstant: 70, in: view)
@@ -463,127 +504,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
            }
     }
 
-    func resetComponentVisibility(in view: UIView) {
-        // Remove all subviews from the content view
-        contentView.subviews.forEach { $0.removeFromSuperview() }
 
-        // Clear the search bar text
-        
-        // Add original components back to the content view
-        trendingSubheading = subHeading(with: "Trending", topAnchorConstant: 70, in: view)
-        contentView.addSubview(trendingSubheading!)
-        let trendingStackView = setupTrending(in: contentView, numberOfComponents: numberOfComponents)
-        contentView.addSubview(trendingStackView)
-
-        recommendationsSubheading = subHeading(with: "Recommendations", topAnchorConstant: 270, in: view)
-        contentView.addSubview(recommendationsSubheading!)
-        let recommendationsStackView = setupRecommendations(in: contentView, numberOfComponents: numberOfComponents)
-        contentView.addSubview(recommendationsStackView)
-
-        myCommunitySubheading = subHeading(with: "My Community", topAnchorConstant: 470, in: view)
-        contentView.addSubview(myCommunitySubheading!)
-        communityStackView1 = setupMyCommunity(in: contentView, numberOfComponents: numberOfComponents)
-        contentView.addSubview(communityStackView1!)
-        communityStackView2 = setupCommunityComponents(topAnchorConstant: 610, subHeadingLabel: myCommunitySubheading!, joinNow: false, numberOfComponents: numberOfComponents, in: contentView)
-        contentView.addSubview(communityStackView2!)
-
-        exploreSubheading = subHeading(with: "Explore More", topAnchorConstant: 830, in: view)
-        contentView.addSubview(exploreSubheading!)
-        exploreStackView1 = setupExplore(in: contentView, numberOfComponents: numberOfComponents)
-        contentView.addSubview(exploreStackView1!)
-        exploreStackView2 = setupCommunityComponents(topAnchorConstant: 970, subHeadingLabel: exploreSubheading!, joinNow: true, numberOfComponents: numberOfComponents, in: contentView)
-        contentView.addSubview(exploreStackView2!)
-
-        // Show subheadings
-        trendingSubheading?.isHidden = false
-        recommendationsSubheading?.isHidden = false
-        myCommunitySubheading?.isHidden = false
-        exploreSubheading?.isHidden = false
-
-        // Scroll the content view to the top
-        scrollView.setContentOffset(CGPoint.zero, animated: true)
-    }
-
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        guard let searchText = searchBar.text?.lowercased(), !searchText.isEmpty else {
-//            resetComponentVisibility(in: contentView)
-//            return
-//        }
-//
-//        // Temporary array to hold matching components
-//        var matchingComponents: [CommunityComponent] = []
-//
-//        // Find matching components
-//        for component in originalComponents {
-//            if component.headingLabelText.lowercased().contains(searchText) {
-//                matchingComponents.append(component)
-//            }
-//        }
-//
-//        // Remove all subviews from the content view
-//        contentView.subviews.forEach { $0.removeFromSuperview() }
-//
-//        if matchingComponents.isEmpty {
-//            // Show "No community found" message
-//            let noResultsLabel = UILabel()
-//            noResultsLabel.text = "No community found"
-//            noResultsLabel.textAlignment = .center
-//            noResultsLabel.textColor = .gray
-//            noResultsLabel.translatesAutoresizingMaskIntoConstraints = false
-//            contentView.addSubview(noResultsLabel)
-//
-//            NSLayoutConstraint.activate([
-//                noResultsLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-//                noResultsLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50)
-//            ])
-//        } else {
-//            // Create a new vertical stack view for search results
-//            let searchResultsStackView = UIStackView()
-//            searchResultsStackView.axis = .vertical
-//            searchResultsStackView.spacing = 0
-//            searchResultsStackView.translatesAutoresizingMaskIntoConstraints = false
-//            contentView.addSubview(searchResultsStackView)
-//
-//            // Add matching components to the search results stack view
-//            for component in matchingComponents {
-//                let wrapperView = UIView()
-//                wrapperView.addSubview(component)
-//                component.translatesAutoresizingMaskIntoConstraints = false
-//                NSLayoutConstraint.activate([
-//                    component.leadingAnchor.constraint(equalTo: wrapperView.leadingAnchor),
-//                    component.trailingAnchor.constraint(equalTo: wrapperView.trailingAnchor),
-//                    component.topAnchor.constraint(equalTo: wrapperView.topAnchor),
-//                    component.bottomAnchor.constraint(equalTo: wrapperView.bottomAnchor),
-//                    component.widthAnchor.constraint(equalToConstant: 200), // Set component width
-//                    component.heightAnchor.constraint(equalToConstant: 150) // Set component height
-//                ])
-//                searchResultsStackView.addArrangedSubview(wrapperView)
-//            }
-//
-//            // Add constraints for the search results stack view
-//            NSLayoutConstraint.activate([
-//                searchResultsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-//                searchResultsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-//                searchResultsStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50),
-//            ])
-//            
-//            // Calculate the total height of the search results
-//            let totalResultsHeight = CGFloat(matchingComponents.count) * 150 // Assuming each component has a fixed height of 150
-//            contentView.heightAnchor.constraint(equalToConstant: totalResultsHeight + 100).isActive = true // Adding 100 for padding
-//            
-//            // Adjust content size of scroll view
-//            scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: totalResultsHeight + 100)
-//        }
-//
-//        // Scroll the content view to the top
-//        scrollView.setContentOffset(CGPoint.zero, animated: true)
-//    }
-
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty {
-            resetComponentVisibility(in: contentView)
-        }
-    }
 
     
 
