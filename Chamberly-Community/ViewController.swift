@@ -72,6 +72,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             contentView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
             showContent(for: selectedTabIndex)
             scrollView.delegate = self
+        
             
             // Initialize search results view
             searchResultsView = SearchResultsView()
@@ -107,32 +108,39 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
 
 
     internal func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-            guard let searchText = searchBar.text?.lowercased(), !searchText.isEmpty else {
-                
-                searchResultsView?.clearResults()
-                searchResultsView?.isHidden = true
-                return
-            }
-
-            // Clear previous search results
+        guard let searchText = searchBar.text?.lowercased(), !searchText.isEmpty else {
+            // If search text is empty, clear search results and hide the search results view
             searchResultsView?.clearResults()
-
-            // Filter components matching the search text
-            let matchingComponents = originalComponents.filter { $0.headingLabelText.lowercased().contains(searchText) }
-
-            if !matchingComponents.isEmpty {
-                // Show search results view
-                searchResultsView?.isHidden = false
-
-                // Add matching components to search results view
-                for component in matchingComponents {
-                    searchResultsView?.addCommunityComponent(component)
-                }
-            } else {
-                // No matching components found, hide search results view
-                searchResultsView?.isHidden = true
-            }
+            searchResultsView?.isHidden = true
+            // Call showContent to update the content based on the selected tab index
+            showContent(for: selectedTabIndex)
+            return
         }
+
+        // Clear previous search results
+        searchResultsView?.clearResults()
+
+        // Filter components matching the search text
+        let matchingComponents = originalComponents.filter { $0.headingLabelText.lowercased().contains(searchText) }
+
+        if !matchingComponents.isEmpty {
+            // Show search results view
+            searchResultsView?.isHidden = false
+
+            // Add matching components to search results view
+            for component in matchingComponents {
+                searchResultsView?.addCommunityComponent(component)
+            }
+        } else {
+            // No matching components found, hide search results view
+            searchResultsView?.isHidden = true
+        }
+        
+        // Clear search bar text
+        searchBar.text = nil
+        // Call showContent to update the content based on the selected tab index
+        showContent(for: selectedTabIndex)
+    }
 
     class SearchResultsView: UIView {
         var backButton: UIButton!
@@ -170,16 +178,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             profilePicture.translatesAutoresizingMaskIntoConstraints = false
             headerProfileStackView.addArrangedSubview(profilePicture)
 
-            // Add search bar
-            let searchBar = UISearchBar()
-            searchBar.searchBarStyle = .minimal
-            searchBar.placeholder = "Search"
-            searchBar.backgroundColor = UIColor(red: 0.946, green: 0.926, blue: 0.989, alpha: 1)
-            searchBar.layer.cornerRadius = 10
-            searchBar.backgroundImage = UIImage()
-            searchBar.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(searchBar)
-
             // Add stack view for search results
             let scrollView = UIScrollView()
             scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -202,7 +200,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
 
             // Adjust constraints for all elements
             NSLayoutConstraint.activate([
-                headerProfileStackView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+                headerProfileStackView.topAnchor.constraint(equalTo: topAnchor, constant: 60),
                 headerProfileStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -40), // Adjusted leading anchor
                 headerProfileStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
                 headerProfileStackView.heightAnchor.constraint(equalToConstant: 40),
@@ -210,15 +208,10 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
                 backButton.centerYAnchor.constraint(equalTo: headerProfileStackView.centerYAnchor),
                 backButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20), // Adjusted leading anchor
 
-                searchBar.topAnchor.constraint(equalTo: headerProfileStackView.bottomAnchor, constant: 20),
-                searchBar.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-                searchBar.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-                searchBar.heightAnchor.constraint(equalToConstant: 36),
-
-                scrollView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20),
+                scrollView.topAnchor.constraint(equalTo: headerProfileStackView.bottomAnchor, constant: 20),
                 scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
                 scrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-                scrollView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20), // Adjusted bottom anchor
+                scrollView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
 
                 stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
                 stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -227,6 +220,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
                 stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
             ])
         }
+
 
 
 
