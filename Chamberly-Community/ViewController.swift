@@ -87,8 +87,25 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
                 searchResultsView!.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ])
         }
+    func showSearchResults() {
+        guard let searchResultsView = searchResultsView else { return }
+        searchResultsView.removeFromSuperview()
+        self.searchResultsView = SearchResultsView(frame: .zero)
+
+        guard let searchResultsView = self.searchResultsView else { return }
+        searchResultsView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchResultsView)
         
-        
+        NSLayoutConstraint.activate([
+            searchResultsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchResultsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            searchResultsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchResultsView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+
+
     internal func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
             guard let searchText = searchBar.text?.lowercased(), !searchText.isEmpty else {
                 resetComponentVisibility(in: contentView)
@@ -118,7 +135,9 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         }
 
     class SearchResultsView: UIView {
+        var backButton: UIButton!
         var stackView: UIStackView!
+        
 
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -129,7 +148,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             super.init(coder: aDecoder)
             setupUI()
         }
-
         private func setupUI() {
             backgroundColor = .white
 
@@ -143,7 +161,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             // Add header community image
             let communityImage = UIImageView(image: UIImage(named: "Header"))
             communityImage.contentMode = .scaleAspectFit
-            
             communityImage.translatesAutoresizingMaskIntoConstraints = false
             headerProfileStackView.addArrangedSubview(communityImage)
 
@@ -170,12 +187,25 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             stackView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(stackView)
 
+            // Add back button with system icon
+            let backButton = UIButton(type: .system)
+            backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal) // Using system back icon
+            backButton.tintColor = UIColor(red: 0.478, green: 0.478, blue: 1.0, alpha: 1.0) // Adjusted color
+            backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+            backButton.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(backButton)
+
+
+            // Adjust constraints for all elements
             // Adjust constraints for all elements
             NSLayoutConstraint.activate([
                 headerProfileStackView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-                headerProfileStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -10),
+                headerProfileStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -40), // Adjusted leading anchor
                 headerProfileStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
                 headerProfileStackView.heightAnchor.constraint(equalToConstant: 40),
+
+                backButton.centerYAnchor.constraint(equalTo: headerProfileStackView.centerYAnchor),
+                backButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20), // Adjusted leading anchor
 
                 searchBar.topAnchor.constraint(equalTo: headerProfileStackView.bottomAnchor, constant: 20),
                 searchBar.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
@@ -187,17 +217,30 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
                 stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
                 stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20)
             ])
+
+        }
+
+
+        @objc private func backButtonTapped() {
+            if let parentVC = superview?.next as? ViewController {
+                parentVC.hideSearchResults()
+            }
         }
 
 
         func addCommunityComponent(_ component: CommunityComponent) {
             stackView.addArrangedSubview(component)
         }
+        
 
         func clearResults() {
             stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         }
     }
+    func hideSearchResults() {
+            searchResultsView?.removeFromSuperview()
+            searchResultsView = nil
+        }
 
     func setupTrending(in view: UIView, numberOfComponents: Int) -> UIStackView {
         trendingSubheading = subHeading(with: "Trending", topAnchorConstant: 70, in: view)
@@ -580,9 +623,9 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
 //    }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty {
-            resetComponentVisibility(in: contentView)
-        }
+//        if searchText.isEmpty {
+//            resetComponentVisibility(in: contentView)
+//        }
     }
 
     
