@@ -181,11 +181,16 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             addSubview(searchBar)
 
             // Add stack view for search results
+            let scrollView = UIScrollView()
+            scrollView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(scrollView)
+
+            // Add stack view inside the scroll view
             stackView = UIStackView()
             stackView.axis = .vertical
             stackView.spacing = 8
             stackView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(stackView)
+            scrollView.addSubview(stackView)
 
             // Add back button with system icon
             let backButton = UIButton(type: .system)
@@ -210,13 +215,19 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
                 searchBar.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
                 searchBar.heightAnchor.constraint(equalToConstant: 36),
 
-                stackView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20),
-                stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-                stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-                stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20)
-            ])
+                scrollView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20),
+                scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+                scrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+                scrollView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20), // Adjusted bottom anchor
 
+                stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+                stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+                stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+                stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+            ])
         }
+
 
 
         @objc private func backButtonTapped() {
