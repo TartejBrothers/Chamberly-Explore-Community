@@ -17,6 +17,9 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
     var communityStackView1: UIStackView?
     var communityStackView2: UIStackView?
     
+    
+    var exploreStackView1: UIStackView?
+    var exploreStackView2: UIStackView?
     var selectedTabIndex = 0
     var scrollView: UIScrollView!
     var contentView: UIView!
@@ -86,6 +89,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         myCommunitySubheading = subHeading(with: "My Community", topAnchorConstant: 470, in: view)
         
         communityStackView1 = setupCommunityComponents(topAnchorConstant: 450, subHeadingLabel: myCommunitySubheading!, joinNow: false, numberOfComponents: numberOfComponents, in: view)
+        
         communityStackView2 = setupCommunityComponents(topAnchorConstant: 610, subHeadingLabel: myCommunitySubheading!, joinNow: false, numberOfComponents: numberOfComponents, in: view)
         
         return communityStackView1!
@@ -94,15 +98,15 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
     
     func setupExplore(in view: UIView, numberOfComponents: Int) -> UIStackView {
         exploreSubheading = subHeading(with: "Explore More", topAnchorConstant: 830, in: view)
-        communityStackView1 = setupCommunityComponents(topAnchorConstant: 810, subHeadingLabel: exploreSubheading!, joinNow: true, numberOfComponents: numberOfComponents, in: view)
-        communityStackView2 = setupCommunityComponents(topAnchorConstant: 970, subHeadingLabel: exploreSubheading!, joinNow: true, numberOfComponents: numberOfComponents, in: view)
+        exploreStackView1 = setupCommunityComponents(topAnchorConstant: 810, subHeadingLabel: exploreSubheading!, joinNow: true, numberOfComponents: numberOfComponents, in: view)
+        exploreStackView2 = setupCommunityComponents(topAnchorConstant: 970, subHeadingLabel: exploreSubheading!, joinNow: true, numberOfComponents: numberOfComponents, in: view)
         
-        return communityStackView1!
+        return exploreStackView1!
         
     }
     
     func setupCommunityComponents(topAnchorConstant: CGFloat, subHeadingLabel: UILabel, joinNow: Bool, numberOfComponents: Int, in view: UIView) -> UIStackView {
-        let componentWidth = UIScreen.main.bounds.width * 0.4
+        let componentWidth = 200
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
@@ -127,7 +131,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             communityComponent.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
             communityComponent.isJoined = !joinNow
             communityComponent.translatesAutoresizingMaskIntoConstraints = false
-            communityComponent.widthAnchor.constraint(equalToConstant: componentWidth).isActive = true
+            communityComponent.widthAnchor.constraint(equalToConstant: CGFloat(componentWidth)).isActive = true
             communityComponent.delegate = self
             return communityComponent
         }
@@ -146,7 +150,8 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         communityStackView.addArrangedSubview(communityComponent3)
         originalComponents.append(communityComponent3)
         
-        let totalWidth = CGFloat(numberOfComponents) * (componentWidth + 8)
+        let totalWidth = CGFloat(numberOfComponents) * CGFloat(componentWidth + 8)
+
         scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
         scrollView.showsHorizontalScrollIndicator = false
         
@@ -306,18 +311,33 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
 
         return headerLabel
     }
-    
     func joinButtonTapped(in component: CommunityComponent) {
+        // Add the component to the stack view
         myCommunityStackView?.addArrangedSubview(component)
         
-        // Adjust the width of communityStack1
-        let componentWidth = UIScreen.main.bounds.width * 0.4
-        let totalWidth = CGFloat(numberOfComponents + 1) * (componentWidth + 8)
-        let scrollView = myCommunityStackView?.superview as? UIScrollView
-        scrollView?.contentSize = CGSize(width: totalWidth, height: scrollView?.frame.height ?? 0)
+        // Ensure the width of the component remains constant
+        let componentWidth = 210
+        component.widthAnchor.constraint(equalToConstant: CGFloat(componentWidth)).isActive = true
+        
+        // Update the width constraints of the components in the stack view
+        for case let subview as CommunityComponent in myCommunityStackView?.arrangedSubviews ?? [] {
+            subview.widthAnchor.constraint(equalToConstant: CGFloat(componentWidth)).isActive = true
+        }
+        
+        // Calculate the new width of the stack view
+        let newWidth = CGFloat(componentWidth) * CGFloat(myCommunityStackView?.arrangedSubviews.count ?? 0)
+        
+        // Update the content view's width constraint to accommodate the new width of myCommunityStackView
+        contentView.widthAnchor.constraint(equalToConstant: newWidth).isActive = false
+        contentView.widthAnchor.constraint(equalToConstant: newWidth).isActive = true
+        
+        // Inform the stack view's superview (scrollView) to update its layout
+        scrollView.layoutIfNeeded()
+        if let scrollView = myCommunityStackView?.superview as? UIScrollView {
+               scrollView.contentSize.width = newWidth
+           }
     }
 
-    
     func resetComponentVisibility(in view: UIView) {
         // Remove all subviews from the content view
         contentView.subviews.forEach { $0.removeFromSuperview() }
