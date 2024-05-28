@@ -191,10 +191,20 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             stackView.translatesAutoresizingMaskIntoConstraints = false
             scrollView.addSubview(stackView)
 
-            // Add constraints for the stack view width
-            let stackViewWidthConstraint = stackView.widthAnchor.constraint(equalToConstant: 250)
-            stackViewWidthConstraint.priority = .defaultLow
-            stackViewWidthConstraint.isActive = true
+                    // Add constraints for the stack view
+            NSLayoutConstraint.activate([
+                        scrollView.topAnchor.constraint(equalTo: headerProfileStackView.bottomAnchor, constant: 20),
+                        scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+                        scrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+                        scrollView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
+                        scrollView.widthAnchor.constraint(equalToConstant: 250), // Set fixed width for the scroll view
+
+                        stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                        stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+                        stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+                        stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+                        stackView.widthAnchor.constraint(equalToConstant: 250) // Set fixed width for the stack view inside the scroll view
+                    ])
 
             // Add back button with system icon
             let backButton = UIButton(type: .system)
@@ -282,21 +292,53 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
     }
     
     func setupCommunityComponents(topAnchorConstant: CGFloat, subHeadingLabel: UILabel, joinNow: Bool, numberOfComponents: Int, in view: UIView) -> UIStackView {
-        let componentWidth = 200
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(scrollView)
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        let communityStackView = UIStackView()
-        communityStackView.axis = .horizontal
-        communityStackView.spacing = 8
-        communityStackView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.addSubview(communityStackView)
+        let componentWidth: CGFloat = 200 // Set the fixed width for each component
+            let componentSpacing: CGFloat = 8 // Set the spacing between components
+            
+            let scrollView = UIScrollView()
+            scrollView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(scrollView)
+            NSLayoutConstraint.activate([
+                scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+                scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant),
+                scrollView.heightAnchor.constraint(equalToConstant: 160) // Set a fixed height for the scroll view
+            ])
+            
+            let communityStackView = UIStackView()
+            communityStackView.axis = .horizontal
+            communityStackView.spacing = componentSpacing
+            communityStackView.translatesAutoresizingMaskIntoConstraints = false
+            scrollView.addSubview(communityStackView)
+            
+            // Array to hold the constraints for each community component
+            var componentWidthConstraints: [NSLayoutConstraint] = []
+            
+            // Add community components to the stack view
+            for _ in 1...numberOfComponents {
+                let communityComponent = createCommunityComponent(headingText: "Community Name")
+                communityStackView.addArrangedSubview(communityComponent)
+                originalComponents.append(communityComponent)
+                
+                // Set a fixed width constraint for each community component
+                let widthConstraint = communityComponent.widthAnchor.constraint(equalToConstant: componentWidth)
+                widthConstraint.isActive = true
+                componentWidthConstraints.append(widthConstraint)
+            }
+            
+            // Calculate the total width of the community components and spacing
+            let totalWidth = CGFloat(numberOfComponents) * componentWidth + CGFloat(numberOfComponents - 1) * componentSpacing
+            
+            // Set the content size of the scroll view
+            scrollView.contentSize = CGSize(width: totalWidth, height: 160)
+            scrollView.showsHorizontalScrollIndicator = false
+            
+            // Activate constraints for subheading label
+            NSLayoutConstraint.activate([
+                subHeadingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                subHeadingLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant - 30),
+                subHeadingLabel.heightAnchor.constraint(equalToConstant: 20)
+            ])
         
         func createCommunityComponent(headingText: String) -> CommunityComponent {
             let communityComponent = CommunityComponent()
@@ -337,7 +379,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         communityStackView.addArrangedSubview(communityComponent3)
         originalComponents.append(communityComponent3)
         
-        let totalWidth = CGFloat(numberOfComponents) * CGFloat(componentWidth + 8)
+        
 
         scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
         scrollView.showsHorizontalScrollIndicator = false
