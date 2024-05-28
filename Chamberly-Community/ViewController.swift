@@ -184,11 +184,17 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             addSubview(scrollView)
 
             // Add stack view inside the scroll view
+            // Add stack view inside the scroll view
             stackView = UIStackView()
             stackView.axis = .vertical
             stackView.spacing = 8
             stackView.translatesAutoresizingMaskIntoConstraints = false
             scrollView.addSubview(stackView)
+
+            // Add constraints for the stack view width
+            let stackViewWidthConstraint = stackView.widthAnchor.constraint(equalToConstant: 250)
+            stackViewWidthConstraint.priority = .defaultLow
+            stackViewWidthConstraint.isActive = true
 
             // Add back button with system icon
             let backButton = UIButton(type: .system)
@@ -286,7 +292,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
         let communityStackView = UIStackView()
         communityStackView.axis = .horizontal
         communityStackView.spacing = 8
@@ -299,12 +304,24 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             communityComponent.personIconImage = UIImage(named: "person2")
             communityComponent.membersLabelText = "81"
             communityComponent.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            communityComponent.isJoined = !joinNow
+            communityComponent.isJoined = false
             communityComponent.translatesAutoresizingMaskIntoConstraints = false
-            communityComponent.widthAnchor.constraint(equalToConstant: CGFloat(componentWidth)).isActive = true
+            
+            // Set width and height constraints
+            communityComponent.widthAnchor.constraint(equalToConstant: 200).isActive = true
+            communityComponent.heightAnchor.constraint(equalToConstant: 160).isActive = true
+            
+            // Set compression resistance and content hugging priorities
+            communityComponent.setContentCompressionResistancePriority(.required, for: .horizontal)
+            communityComponent.setContentHuggingPriority(.required, for: .horizontal)
+            communityComponent.setContentCompressionResistancePriority(.required, for: .vertical)
+            communityComponent.setContentHuggingPriority(.required, for: .vertical)
+            
             communityComponent.delegate = self
             return communityComponent
         }
+
+
         
         let communityComponent1 = createCommunityComponent(headingText: "Loyalty Doubts")
         communityStackView.addArrangedSubview(communityComponent1)
