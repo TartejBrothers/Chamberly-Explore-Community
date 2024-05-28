@@ -72,6 +72,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             contentView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
             showContent(for: selectedTabIndex)
             scrollView.delegate = self
+        
             
             // Initialize search results view
             searchResultsView = SearchResultsView()
@@ -107,32 +108,39 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
 
 
     internal func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-            guard let searchText = searchBar.text?.lowercased(), !searchText.isEmpty else {
-                
-                searchResultsView?.clearResults()
-                searchResultsView?.isHidden = true
-                return
-            }
-
-            // Clear previous search results
+        guard let searchText = searchBar.text?.lowercased(), !searchText.isEmpty else {
+            // If search text is empty, clear search results and hide the search results view
             searchResultsView?.clearResults()
-
-            // Filter components matching the search text
-            let matchingComponents = originalComponents.filter { $0.headingLabelText.lowercased().contains(searchText) }
-
-            if !matchingComponents.isEmpty {
-                // Show search results view
-                searchResultsView?.isHidden = false
-
-                // Add matching components to search results view
-                for component in matchingComponents {
-                    searchResultsView?.addCommunityComponent(component)
-                }
-            } else {
-                // No matching components found, hide search results view
-                searchResultsView?.isHidden = true
-            }
+            searchResultsView?.isHidden = true
+            // Call showContent to update the content based on the selected tab index
+            showContent(for: selectedTabIndex)
+            return
         }
+
+        // Clear previous search results
+        searchResultsView?.clearResults()
+
+        // Filter components matching the search text
+        let matchingComponents = originalComponents.filter { $0.headingLabelText.lowercased().contains(searchText) }
+
+        if !matchingComponents.isEmpty {
+            // Show search results view
+            searchResultsView?.isHidden = false
+
+            // Add matching components to search results view
+            for component in matchingComponents {
+                searchResultsView?.addCommunityComponent(component)
+            }
+        } else {
+            // No matching components found, hide search results view
+            searchResultsView?.isHidden = true
+        }
+        
+        // Clear search bar text
+        searchBar.text = nil
+        // Call showContent to update the content based on the selected tab index
+        showContent(for: selectedTabIndex)
+    }
 
     class SearchResultsView: UIView {
         var backButton: UIButton!
@@ -170,27 +178,33 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             profilePicture.translatesAutoresizingMaskIntoConstraints = false
             headerProfileStackView.addArrangedSubview(profilePicture)
 
-            // Add search bar
-            let searchBar = UISearchBar()
-            searchBar.searchBarStyle = .minimal
-            searchBar.placeholder = "Search"
-            searchBar.backgroundColor = UIColor(red: 0.946, green: 0.926, blue: 0.989, alpha: 1)
-            searchBar.layer.cornerRadius = 10
-            searchBar.backgroundImage = UIImage()
-            searchBar.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(searchBar)
-
             // Add stack view for search results
             let scrollView = UIScrollView()
             scrollView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(scrollView)
 
             // Add stack view inside the scroll view
+            // Add stack view inside the scroll view
             stackView = UIStackView()
             stackView.axis = .vertical
             stackView.spacing = 8
             stackView.translatesAutoresizingMaskIntoConstraints = false
             scrollView.addSubview(stackView)
+
+                    // Add constraints for the stack view
+            NSLayoutConstraint.activate([
+                        scrollView.topAnchor.constraint(equalTo: headerProfileStackView.bottomAnchor, constant: 20),
+                        scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+                        scrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+                        scrollView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
+                        scrollView.widthAnchor.constraint(equalToConstant: 250), // Set fixed width for the scroll view
+
+                        stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                        stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+                        stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+                        stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+                        stackView.widthAnchor.constraint(equalToConstant: 250) // Set fixed width for the stack view inside the scroll view
+                    ])
 
             // Add back button with system icon
             let backButton = UIButton(type: .system)
@@ -202,7 +216,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
 
             // Adjust constraints for all elements
             NSLayoutConstraint.activate([
-                headerProfileStackView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+                headerProfileStackView.topAnchor.constraint(equalTo: topAnchor, constant: 60),
                 headerProfileStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -40), // Adjusted leading anchor
                 headerProfileStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
                 headerProfileStackView.heightAnchor.constraint(equalToConstant: 40),
@@ -210,15 +224,10 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
                 backButton.centerYAnchor.constraint(equalTo: headerProfileStackView.centerYAnchor),
                 backButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20), // Adjusted leading anchor
 
-                searchBar.topAnchor.constraint(equalTo: headerProfileStackView.bottomAnchor, constant: 20),
-                searchBar.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-                searchBar.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-                searchBar.heightAnchor.constraint(equalToConstant: 36),
-
-                scrollView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20),
+                scrollView.topAnchor.constraint(equalTo: headerProfileStackView.bottomAnchor, constant: 20),
                 scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
                 scrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-                scrollView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20), // Adjusted bottom anchor
+                scrollView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
 
                 stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
                 stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -227,6 +236,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
                 stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
             ])
         }
+
 
 
 
@@ -282,22 +292,53 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
     }
     
     func setupCommunityComponents(topAnchorConstant: CGFloat, subHeadingLabel: UILabel, joinNow: Bool, numberOfComponents: Int, in view: UIView) -> UIStackView {
-        let componentWidth = 200
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(scrollView)
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        
-        let communityStackView = UIStackView()
-        communityStackView.axis = .horizontal
-        communityStackView.spacing = 8
-        communityStackView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.addSubview(communityStackView)
+        let componentWidth: CGFloat = 200 // Set the fixed width for each component
+            let componentSpacing: CGFloat = 8 // Set the spacing between components
+            
+            let scrollView = UIScrollView()
+            scrollView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(scrollView)
+            NSLayoutConstraint.activate([
+                scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+                scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant),
+                scrollView.heightAnchor.constraint(equalToConstant: 160) // Set a fixed height for the scroll view
+            ])
+            
+            let communityStackView = UIStackView()
+            communityStackView.axis = .horizontal
+            communityStackView.spacing = componentSpacing
+            communityStackView.translatesAutoresizingMaskIntoConstraints = false
+            scrollView.addSubview(communityStackView)
+            
+            // Array to hold the constraints for each community component
+            var componentWidthConstraints: [NSLayoutConstraint] = []
+            
+            // Add community components to the stack view
+            for _ in 1...numberOfComponents {
+                let communityComponent = createCommunityComponent(headingText: "Community Name")
+                communityStackView.addArrangedSubview(communityComponent)
+                originalComponents.append(communityComponent)
+                
+                // Set a fixed width constraint for each community component
+                let widthConstraint = communityComponent.widthAnchor.constraint(equalToConstant: componentWidth)
+                widthConstraint.isActive = true
+                componentWidthConstraints.append(widthConstraint)
+            }
+            
+            // Calculate the total width of the community components and spacing
+            let totalWidth = CGFloat(numberOfComponents) * componentWidth + CGFloat(numberOfComponents - 1) * componentSpacing
+            
+            // Set the content size of the scroll view
+            scrollView.contentSize = CGSize(width: totalWidth, height: 160)
+            scrollView.showsHorizontalScrollIndicator = false
+            
+            // Activate constraints for subheading label
+            NSLayoutConstraint.activate([
+                subHeadingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                subHeadingLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: topAnchorConstant - 30),
+                subHeadingLabel.heightAnchor.constraint(equalToConstant: 20)
+            ])
         
         func createCommunityComponent(headingText: String) -> CommunityComponent {
             let communityComponent = CommunityComponent()
@@ -305,12 +346,24 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             communityComponent.personIconImage = UIImage(named: "person2")
             communityComponent.membersLabelText = "81"
             communityComponent.descriptionLabelText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            communityComponent.isJoined = !joinNow
+            communityComponent.isJoined = false
             communityComponent.translatesAutoresizingMaskIntoConstraints = false
-            communityComponent.widthAnchor.constraint(equalToConstant: CGFloat(componentWidth)).isActive = true
+            
+            // Set width and height constraints
+            communityComponent.widthAnchor.constraint(equalToConstant: 200).isActive = true
+            communityComponent.heightAnchor.constraint(equalToConstant: 160).isActive = true
+            
+            // Set compression resistance and content hugging priorities
+            communityComponent.setContentCompressionResistancePriority(.required, for: .horizontal)
+            communityComponent.setContentHuggingPriority(.required, for: .horizontal)
+            communityComponent.setContentCompressionResistancePriority(.required, for: .vertical)
+            communityComponent.setContentHuggingPriority(.required, for: .vertical)
+            
             communityComponent.delegate = self
             return communityComponent
         }
+
+
         
         let communityComponent1 = createCommunityComponent(headingText: "Loyalty Doubts")
         communityStackView.addArrangedSubview(communityComponent1)
@@ -326,7 +379,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         communityStackView.addArrangedSubview(communityComponent3)
         originalComponents.append(communityComponent3)
         
-        let totalWidth = CGFloat(numberOfComponents) * CGFloat(componentWidth + 8)
+        
 
         scrollView.contentSize = CGSize(width: totalWidth, height: scrollView.frame.height)
         scrollView.showsHorizontalScrollIndicator = false
