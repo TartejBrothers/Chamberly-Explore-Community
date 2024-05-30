@@ -1,7 +1,9 @@
 import UIKit
+
 protocol CommunityComponentDelegate: AnyObject {
     func joinButtonTapped(in component: CommunityComponent)
 }
+
 class CommunityComponent: UIView {
     // Properties for dynamic content
     var headingLabelText: String = "" {
@@ -31,6 +33,7 @@ class CommunityComponent: UIView {
     var isJoined: Bool = false {
         didSet {
             joinButton.setTitle(isJoined ? "Joined" : "Join Now", for: .normal)
+            joinButton.backgroundColor = isJoined ? UIColor.gray : UIColor(red: 0.48, green: 0.48, blue: 1.0, alpha: 1.0)
         }
     }
     
@@ -81,12 +84,12 @@ class CommunityComponent: UIView {
     
     fileprivate let joinButton: UIButton = {
         let button = UIButton()
-               button.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 1.0, alpha: 1.0)
-               button.setTitleColor(.white, for: .normal)
-               button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 7)
-               button.layer.cornerRadius = 5
-               button.addTarget(self, action: #selector(joinButtonTapped(_:)), for: .touchUpInside)
-               return button
+        button.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 1.0, alpha: 1.0)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 7)
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(joinButtonTapped(_:)), for: .touchUpInside)
+        return button
     }()
 
 
@@ -103,10 +106,10 @@ class CommunityComponent: UIView {
     
     private func setupUI() {
         backgroundColor = .white
-            layer.borderWidth = 3
-            layer.borderColor = UIColor(red: 0.97, green: 0.97, blue: 1.0, alpha: 1.0).cgColor
-            layer.cornerRadius = 10
-            clipsToBounds = true
+        layer.borderWidth = 3
+        layer.borderColor = UIColor(red: 0.97, green: 0.97, blue: 1.0, alpha: 1.0).cgColor
+        layer.cornerRadius = 10
+        clipsToBounds = true
         
         backgroundColor = .white
         addSubview(imageView)
@@ -119,68 +122,72 @@ class CommunityComponent: UIView {
         
         let padding: CGFloat = 10
             
-            // Set constraints for image view
-            imageView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                imageView.topAnchor.constraint(equalTo: topAnchor, constant: padding),
-                imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
-                imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
-                imageView.heightAnchor.constraint(equalToConstant: 70),
-                imageView.widthAnchor.constraint(equalToConstant: 60)
-            ])
-            
-            // Set constraints for title label
-            titleLabel.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: padding),
-                titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
-                titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
-                titleLabel.heightAnchor.constraint(equalToConstant: 20)
-            ])
-            
-            // Set constraints for control ADHD label
-            headingLabel.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                headingLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-                headingLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding)
-            ])
-            
-            // Set constraints for person icon image view
-            personIconImageView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                personIconImageView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-                personIconImageView.trailingAnchor.constraint(equalTo: membersLabel.leadingAnchor, constant: 0),
-                personIconImageView.widthAnchor.constraint(equalToConstant: 20),
-                personIconImageView.heightAnchor.constraint(equalToConstant: 20)
-            ])
-            
-            // Set constraints for members label
-            membersLabel.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                membersLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-                membersLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding)
-            ])
-            
-            // Set constraints for join button
-            joinButton.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                joinButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: padding),
-                joinButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
-                joinButton.widthAnchor.constraint(equalToConstant: 40),
-                joinButton.heightAnchor.constraint(equalToConstant: 20)
-            ])
-            
-            // Set constraints for description label
-            descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: padding),
-                descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
-                descriptionLabel.trailingAnchor.constraint(equalTo: joinButton.leadingAnchor, constant: -padding),
-                descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -padding)
-            ])
-            
-            descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        }
+        // Set constraints for image view
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: topAnchor, constant: padding),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
+            imageView.heightAnchor.constraint(equalToConstant: 70),
+            imageView.widthAnchor.constraint(equalToConstant: 60)
+        ])
+        
+        // Set constraints for title label
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: padding),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
+            titleLabel.heightAnchor.constraint(equalToConstant: 20)
+        ])
+        
+        // Set constraints for control ADHD label
+        headingLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            headingLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            headingLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding)
+        ])
+        
+        // Set constraints for person icon image view
+        personIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            personIconImageView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            personIconImageView.trailingAnchor.constraint(equalTo: membersLabel.leadingAnchor, constant: 0),
+            personIconImageView.widthAnchor.constraint(equalToConstant: 20),
+            personIconImageView.heightAnchor.constraint(equalToConstant: 20)
+        ])
+        
+        // Set constraints for members label
+        membersLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            membersLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            membersLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding)
+        ])
+        
+        // Set constraints for join button
+        joinButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            joinButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: padding),
+            joinButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
+            joinButton.widthAnchor.constraint(equalToConstant: 40),
+            joinButton.heightAnchor.constraint(equalToConstant: 20)
+        ])
+        
+        // Set constraints for description label
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: padding),
+            descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            descriptionLabel.trailingAnchor.constraint(equalTo: joinButton.leadingAnchor, constant: -padding),
+            descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -padding)
+        ])
+        
+        descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        
+        // Add width constraint for the component
+        translatesAutoresizingMaskIntoConstraints = false
+        widthAnchor.constraint(equalToConstant: 200).isActive = true
+    }
     
     weak var delegate: CommunityComponentDelegate?
 
@@ -188,7 +195,6 @@ class CommunityComponent: UIView {
         delegate?.joinButtonTapped(in: self)
         isJoined = !isJoined
     }
-
 }
 
 import SwiftUI
