@@ -43,7 +43,7 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         
         let headerStackView = UIStackView()
            headerStackView.axis = .horizontal
-           headerStackView.alignment = .center 
+           headerStackView.alignment = .center
            let communityImage = UIImageView(image: UIImage(named: "Header"))
            communityImage.contentMode = .scaleAspectFit
            headerStackView.addArrangedSubview(communityImage)
