@@ -1,9 +1,6 @@
 import UIKit
 
 class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegate, CommunityComponentDelegate {
-
-    
-    
     var trendingStackView: UIStackView?
     var recommendationsStackView: UIStackView?
     var myCommunityStackView: UIStackView?
@@ -16,7 +13,6 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
     
     var communityStackView1: UIStackView?
     var communityStackView2: UIStackView?
-    
     
     var exploreStackView1: UIStackView?
     var exploreStackView2: UIStackView?
@@ -35,229 +31,248 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
         setupSearchBar(in: view)
         setupTabs(in: view)
         
-        // Initialize the scroll view
         scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
         scrollView.showsVerticalScrollIndicator = false
         
         let headerStackView = UIStackView()
-           headerStackView.axis = .horizontal
-           headerStackView.alignment = .center
-           let communityImage = UIImageView(image: UIImage(named: "Header"))
-           communityImage.contentMode = .scaleAspectFit
-           headerStackView.addArrangedSubview(communityImage)
-           headerStackView.translatesAutoresizingMaskIntoConstraints = false
-           view.addSubview(headerStackView)
+        headerStackView.axis = .horizontal
+        headerStackView.alignment = .center
+        let communityImage = UIImageView(image: UIImage(named: "Header"))
+        communityImage.contentMode = .scaleAspectFit
+        headerStackView.addArrangedSubview(communityImage)
+        headerStackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(headerStackView)
 
-           NSLayoutConstraint.activate([
-               headerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-               headerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
-               headerStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0)
-           ])
+        NSLayoutConstraint.activate([
+            headerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            headerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            headerStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0)
+        ])
 
-           // Initialize the scroll view
-           scrollView = UIScrollView()
-           scrollView.translatesAutoresizingMaskIntoConstraints = false
-           view.addSubview(scrollView)
-           scrollView.showsVerticalScrollIndicator = false
+        scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        scrollView.showsVerticalScrollIndicator = false
 
-           NSLayoutConstraint.activate([
-               scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-               scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-               scrollView.topAnchor.constraint(equalTo: headerStackView.bottomAnchor, constant: 120), // Adjusted top anchor
-               scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-           ])
-
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: headerStackView.bottomAnchor, constant: 120),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
         
+        contentView = UIView()
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
         
-
-            
-            contentView = UIView()
-            contentView.translatesAutoresizingMaskIntoConstraints = false
-            scrollView.addSubview(contentView)
-            
-            NSLayoutConstraint.activate([
-                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
-            ])
-            
-            trendingStackView = setupTrending(in: contentView, numberOfComponents: numberOfComponents)
-            recommendationsStackView = setupRecommendations(in: contentView, numberOfComponents: numberOfComponents)
-            myCommunityStackView = setupMyCommunity(in: contentView, numberOfComponents: numberOfComponents)
-            exploreStackView = setupExplore(in: contentView, numberOfComponents: numberOfComponents)
-            
-            // Set content size of scroll view
-            let contentWidth = UIScreen.main.bounds.width
-            let contentHeight: CGFloat = 1450
-            contentView.widthAnchor.constraint(equalToConstant: contentWidth).isActive = true
-            contentView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
-            showContent(for: selectedTabIndex)
-            scrollView.delegate = self
+        NSLayoutConstraint.activate([
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
         
-            
-            // Initialize search results view
-            searchResultsView = SearchResultsView()
-            searchResultsView?.translatesAutoresizingMaskIntoConstraints = false
-            searchResultsView?.isHidden = true // Hide initially
-            view.addSubview(searchResultsView!)
-            
-            // Add constraints for search results view
-            NSLayoutConstraint.activate([
-                searchResultsView!.topAnchor.constraint(equalTo: view.topAnchor),
-                searchResultsView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                searchResultsView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                searchResultsView!.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            ])
-        }
+        trendingStackView = setupTrending(in: contentView, numberOfComponents: numberOfComponents)
+        recommendationsStackView = setupRecommendations(in: contentView, numberOfComponents: numberOfComponents)
+        myCommunityStackView = setupMyCommunity(in: contentView, numberOfComponents: numberOfComponents)
+        exploreStackView = setupExplore(in: contentView, numberOfComponents: numberOfComponents)
         
-        func showSearchResults() {
-            guard let searchResultsView = searchResultsView else { return }
-            searchResultsView.removeFromSuperview()
-            self.searchResultsView = SearchResultsView(frame: .zero)
+        let contentWidth = UIScreen.main.bounds.width
+        let contentHeight: CGFloat = 1450
+        contentView.widthAnchor.constraint(equalToConstant: contentWidth).isActive = true
+        contentView.heightAnchor.constraint(equalToConstant: contentHeight).isActive = true
+        showContent(for: selectedTabIndex)
+        scrollView.delegate = self
+        
+        searchResultsView = SearchResultsView()
+        searchResultsView?.translatesAutoresizingMaskIntoConstraints = false
+        searchResultsView?.isHidden = true
+        view.addSubview(searchResultsView!)
+        
+        NSLayoutConstraint.activate([
+            searchResultsView!.topAnchor.constraint(equalTo: view.topAnchor),
+            searchResultsView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchResultsView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            searchResultsView!.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
 
-            guard let searchResultsView = self.searchResultsView else { return }
-            searchResultsView.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(searchResultsView)
-            
-            NSLayoutConstraint.activate([
-                searchResultsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                searchResultsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                searchResultsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-                searchResultsView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            ])
-        }
+    func showSearchResults() {
+        guard let searchResultsView = searchResultsView else { return }
+        searchResultsView.removeFromSuperview()
+        self.searchResultsView = SearchResultsView(frame: .zero)
 
-        internal func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-            guard let searchText = searchBar.text?.lowercased(), !searchText.isEmpty else {
-                // If search text is empty, clear search results and hide the search results view
-                searchResultsView?.clearResults()
-                searchResultsView?.isHidden = true
-                // Call showContent to update the content based on the selected tab index
-                showContent(for: selectedTabIndex)
-                return
-            }
+        guard let searchResultsView = self.searchResultsView else { return }
+        searchResultsView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchResultsView)
+        
+        NSLayoutConstraint.activate([
+            searchResultsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchResultsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            searchResultsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchResultsView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
 
-            // Clear previous search results
+    internal func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let searchText = searchBar.text?.lowercased(), !searchText.isEmpty else {
             searchResultsView?.clearResults()
-
-            // Filter components matching the search text
-            let matchingComponents = originalComponents.filter { $0.headingLabelText.lowercased().contains(searchText) }
-
-            if !matchingComponents.isEmpty {
-                // Show search results view
-                searchResultsView?.isHidden = false
-
-                // Add matching components to search results view
-                for component in matchingComponents {
-                    searchResultsView?.addCommunityComponent(component)
-                }
-            } else {
-                // No matching components found, hide search results view
-                searchResultsView?.isHidden = true
-            }
-            
-            // Clear search bar text
-            searchBar.text = nil
-            // Call showContent to update the content based on the selected tab index
+            searchResultsView?.isHidden = true
             showContent(for: selectedTabIndex)
+            return
         }
 
-        class SearchResultsView: UIView {
-            var backButton: UIButton!
-            var stackView: UIStackView!
+        searchResultsView?.clearResults()
+
+        let matchingComponents = originalComponents.filter { $0.headingLabelText.lowercased().contains(searchText) }
+
+        if !matchingComponents.isEmpty {
+            searchResultsView?.isHidden = false
+            searchResultsView?.addCommunityComponents(matchingComponents)
+        } else {
+            searchResultsView?.isHidden = true
+        }
+        
+        searchBar.text = nil
+        showContent(for: selectedTabIndex)
+    }
+
+    class SearchResultsView: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+        var collectionView: UICollectionView!
+        var backButton: UIButton!
+        var components: [CommunityComponent] = []
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            setupUI()
+        }
+
+        required init?(coder aDecoder: NSCoder) {
+            super.init(coder: aDecoder)
+            setupUI()
+        }
+        
+        private func setupUI() {
+            backgroundColor = .white
             
-            override init(frame: CGRect) {
-                super.init(frame: frame)
-                setupUI()
-            }
+            let headerProfileStackView = UIStackView()
+            headerProfileStackView.axis = .horizontal
+            headerProfileStackView.spacing = 20
+            headerProfileStackView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(headerProfileStackView)
 
-            required init?(coder aDecoder: NSCoder) {
-                super.init(coder: aDecoder)
-                setupUI()
-            }
+            let communityImage = UIImageView(image: UIImage(named: "Header"))
+            communityImage.contentMode = .scaleAspectFit
+            communityImage.translatesAutoresizingMaskIntoConstraints = false
+            headerProfileStackView.addArrangedSubview(communityImage)
+
+            NSLayoutConstraint.activate([
+                headerProfileStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+                headerProfileStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+                headerProfileStackView.topAnchor.constraint(equalTo: topAnchor, constant: 20)
+            ])
             
-            private func setupUI() {
-                backgroundColor = .white
-
-                // Create a horizontal stack view for the header image and profile picture
-                let headerProfileStackView = UIStackView()
-                headerProfileStackView.axis = .horizontal
-                headerProfileStackView.spacing = 20
-                headerProfileStackView.translatesAutoresizingMaskIntoConstraints = false
-                addSubview(headerProfileStackView)
-
-                // Add header community image
-                let communityImage = UIImageView(image: UIImage(named: "Header"))
-                communityImage.contentMode = .scaleAspectFit
-                communityImage.translatesAutoresizingMaskIntoConstraints = false
-                headerProfileStackView.addArrangedSubview(communityImage)
-
-
-                // Add stack view for search results
-                let scrollView = UIScrollView()
-                scrollView.translatesAutoresizingMaskIntoConstraints = false
-                addSubview(scrollView)
-
-                stackView = UIStackView()
-                stackView.axis = .vertical
-                stackView.spacing = 8
-                stackView.translatesAutoresizingMaskIntoConstraints = false
-                scrollView.addSubview(stackView)
-                scrollView.showsVerticalScrollIndicator = false
-
-                // Add constraints for the stack view
-                NSLayoutConstraint.activate([
-                    scrollView.topAnchor.constraint(equalTo: headerProfileStackView.bottomAnchor, constant: 20),
-                    scrollView.centerXAnchor.constraint(equalTo: self.centerXAnchor), // Center the scroll view horizontally
-                    scrollView.widthAnchor.constraint(equalToConstant: 200), // Set fixed width for the scroll view
-                    scrollView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
-                    
-
-                    stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                    stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                    stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                    stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-                    stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor) // Ensure stack view matches scroll view width
-                    
-                ])
-
-                // Add back button with system icon
-                let backButton = UIButton(type: .system)
-                backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal) // Using system back icon
-                backButton.tintColor = UIColor(red: 0.478, green: 0.478, blue: 1.0, alpha: 1.0) // Adjusted color
-                backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-                backButton.translatesAutoresizingMaskIntoConstraints = false
-                addSubview(backButton)
-
-                // Adjust constraints for all elements
-                NSLayoutConstraint.activate([
-                    headerProfileStackView.topAnchor.constraint(equalTo: topAnchor, constant: 60),
-                    headerProfileStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0), // Adjusted leading anchor
-                    headerProfileStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
-                    headerProfileStackView.heightAnchor.constraint(equalToConstant: 40),
-
-                    backButton.centerYAnchor.constraint(equalTo: headerProfileStackView.centerYAnchor),
-                    backButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20), // Adjusted leading anchor
-                ])
-            }
+            let layout = UICollectionViewFlowLayout()
+            layout.scrollDirection = .vertical
+            layout.minimumInteritemSpacing = 10
+            layout.minimumLineSpacing = 10
+            collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+            collectionView.translatesAutoresizingMaskIntoConstraints = false
+            collectionView.dataSource = self
+            collectionView.delegate = self
+            collectionView.backgroundColor = .white
+            collectionView.register(CommunityComponentCell.self, forCellWithReuseIdentifier: "CommunityComponentCell")
+            addSubview(collectionView)
             
-            @objc func backButtonTapped() {
-                // Hide the search results view
+            NSLayoutConstraint.activate([
+                collectionView.topAnchor.constraint(equalTo: headerProfileStackView.bottomAnchor, constant: 20),
+                collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                collectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            ])
+            backButton = UIButton(type: .system)
+                    backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal) // Using system back icon
+                    backButton.tintColor = UIColor(red: 0.478, green: 0.478, blue: 1.0, alpha: 1.0) // Adjusted color
+                    backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+                    backButton.translatesAutoresizingMaskIntoConstraints = false
+                    addSubview(backButton)
+
+                    // Adjust constraints for all elements
+                    NSLayoutConstraint.activate([
+                        headerProfileStackView.topAnchor.constraint(equalTo: topAnchor, constant: 60),
+                        headerProfileStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0), // Adjusted leading anchor
+                        headerProfileStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+                        headerProfileStackView.heightAnchor.constraint(equalToConstant: 40),
+
+                        backButton.centerYAnchor.constraint(equalTo: headerProfileStackView.centerYAnchor),
+                        backButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20), // Adjusted leading anchor
+                    ])
+        }
+        @objc func backButtonTapped() {
+                
                 self.isHidden = true
             }
-            
-            func addCommunityComponent(_ component: CommunityComponent) {
-                stackView.addArrangedSubview(component)
-            }
-            
-            func clearResults() {
-                stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        func addCommunityComponents(_ components: [CommunityComponent]) {
+            self.components = components
+            collectionView.reloadData()
+        }
+        
+        func clearResults() {
+            components.removeAll()
+            collectionView.reloadData()
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            return components.count
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CommunityComponentCell", for: indexPath) as! CommunityComponentCell
+            cell.communityComponent = components[indexPath.item]
+            return cell
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            return CGSize(width: 200, height: 160)
+        }
+        
+        class CommunityComponentCell: UICollectionViewCell {
+            var communityComponent: CommunityComponent? {
+                didSet {
+                    if let component = communityComponent {
+                        contentView.addSubview(component)
+                        component.translatesAutoresizingMaskIntoConstraints = false
+                        NSLayoutConstraint.activate([
+                            component.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                            component.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+                            component.topAnchor.constraint(equalTo: contentView.topAnchor),
+                            component.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+                        ])
+                    }
+                }
             }
         }
+    }
+    
+    func addCommunityComponents(_ components: [CommunityComponent]) {
+        for component in components {
+            if selectedTabIndex == 0 {
+                trendingStackView?.addArrangedSubview(component)
+            } else if selectedTabIndex == 1 {
+                recommendationsStackView?.addArrangedSubview(component)
+            } else if selectedTabIndex == 2 {
+                myCommunityStackView?.addArrangedSubview(component)
+            } else if selectedTabIndex == 3 {
+                exploreStackView?.addArrangedSubview(component)
+            }
+        }
+    }
+
+    
 
     func setupTrending(in view: UIView, numberOfComponents: Int) -> UIStackView {
         trendingSubheading = subHeading(with: "Trending", topAnchorConstant: 70, in: view)
