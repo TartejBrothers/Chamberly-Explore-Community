@@ -186,13 +186,14 @@ class ViewController: UIViewController, UISearchBarDelegate, UIScrollViewDelegat
             collectionView.backgroundColor = .white
             collectionView.register(CommunityComponentCell.self, forCellWithReuseIdentifier: "CommunityComponentCell")
             addSubview(collectionView)
-            
+
             NSLayoutConstraint.activate([
                 collectionView.topAnchor.constraint(equalTo: headerProfileStackView.bottomAnchor, constant: 20),
-                collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                collectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+                collectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
                 collectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
             ])
+
             backButton = UIButton(type: .system)
                     backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal) // Using system back icon
                     backButton.tintColor = UIColor(red: 0.478, green: 0.478, blue: 1.0, alpha: 1.0) // Adjusted color
